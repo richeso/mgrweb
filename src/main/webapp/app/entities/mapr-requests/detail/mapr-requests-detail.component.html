@@ -1,0 +1,76 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="maprRequests">
+      <h2 data-cy="maprRequestsDetailsHeading"><span jhiTranslate="mgrwebApp.maprRequests.detail.title">Mapr Requests</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ maprRequests.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.type">Type</span></dt>
+        <dd>
+          <span>{{ maprRequests.type }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.action">Action</span></dt>
+        <dd>
+          <span>{{ maprRequests.action }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.name">Name</span></dt>
+        <dd>
+          <span>{{ maprRequests.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.path">Path</span></dt>
+        <dd>
+          <span>{{ maprRequests.path }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.source">Source</span></dt>
+        <dd>
+          <span>{{ maprRequests.source }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.quota">Quota</span></dt>
+        <dd>
+          <span>{{ maprRequests.quota }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.advisoryQuota">Advisory Quota</span></dt>
+        <dd>
+          <span>{{ maprRequests.advisoryQuota }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.requestUser">Request User</span></dt>
+        <dd>
+          <span>{{ maprRequests.requestUser }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.requestDate">Request Date</span></dt>
+        <dd>
+          <span>{{ maprRequests.requestDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.requestStatus">Request Status</span></dt>
+        <dd>
+          <span>{{ maprRequests.requestStatus }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.statusChangedDate">Status Changed Date</span></dt>
+        <dd>
+          <span>{{ maprRequests.statusChangedDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.previousStatus">Previous Status</span></dt>
+        <dd>
+          <span>{{ maprRequests.previousStatus }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/mapr-requests', maprRequests.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
