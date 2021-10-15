@@ -15,7 +15,7 @@
 
 mongock:
   change-logs-scan-package:
-    - com.hpe.mgr.config.dbmigrations
+    - com.mapr.mgrweb.config.dbmigrations
   mongo-db:
     read-concern: local
     write-concern:
