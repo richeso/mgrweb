@@ -1,6 +1,7 @@
 package com.mapr.mgrweb;
 
 import com.mapr.mgrweb.config.ApplicationProperties;
+import com.mapr.mgrweb.service.CustomerService;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,6 +40,9 @@ public class MgrwebApp {
      */
     @PostConstruct
     public void initApplication() {
+        System.setProperty("fs.mapr.bailout.on.library.mismatch", "false");
+        //        log.info(System.getProperty("fs.mapr.bailout.on.library.mismatch"));
+
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) &&
