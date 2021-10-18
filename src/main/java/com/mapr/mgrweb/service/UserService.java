@@ -183,7 +183,6 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
-        user.setCustomers(userDTO.getCustomers());
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -251,7 +250,6 @@ public class UserService {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
-                    user.setCustomers(userDTO.getCustomers());
                     userRepository.save(user);
                     this.clearUserCaches(user);
                     log.debug("Changed Information for User: {}", user);

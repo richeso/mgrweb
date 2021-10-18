@@ -61,8 +61,6 @@ public class User extends AbstractAuditingEntity implements Serializable, MapRDB
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private Instant resetDate = null;
 
-    private List<String> customers;
-
     private Set<Authority> authorities = new HashSet<>();
 
     public String get_id() {
@@ -173,14 +171,6 @@ public class User extends AbstractAuditingEntity implements Serializable, MapRDB
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
-    }
-
-    public List<String> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<String> customers) {
-        this.customers = customers;
     }
 
     @Override

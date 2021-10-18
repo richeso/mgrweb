@@ -52,8 +52,6 @@ public class UserDTO {
 
     private Set<String> authorities;
 
-    private List<String> customers;
-
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -72,15 +70,6 @@ public class UserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
-        this.customers = user.getCustomers();
-    }
-
-    public List<String> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<String> customers) {
-        this.customers = customers;
     }
 
     public String getId() {
