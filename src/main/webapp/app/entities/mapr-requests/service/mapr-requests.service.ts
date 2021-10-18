@@ -81,14 +81,14 @@ export class MaprRequestsService {
   protected convertDateFromClient(maprRequests: IMaprRequests): IMaprRequests {
     return Object.assign({}, maprRequests, {
       requestDate: maprRequests.requestDate?.isValid() ? maprRequests.requestDate.toJSON() : undefined,
-      statusChangedDate: maprRequests.statusChangedDate?.isValid() ? maprRequests.statusChangedDate.toJSON() : undefined,
+      statusDate: maprRequests.statusDate?.isValid() ? maprRequests.statusDate.toJSON() : undefined,
     });
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       res.body.requestDate = res.body.requestDate ? dayjs(res.body.requestDate) : undefined;
-      res.body.statusChangedDate = res.body.statusChangedDate ? dayjs(res.body.statusChangedDate) : undefined;
+      res.body.statusDate = res.body.statusDate ? dayjs(res.body.statusDate) : undefined;
     }
     return res;
   }
@@ -97,7 +97,7 @@ export class MaprRequestsService {
     if (res.body) {
       res.body.forEach((maprRequests: IMaprRequests) => {
         maprRequests.requestDate = maprRequests.requestDate ? dayjs(maprRequests.requestDate) : undefined;
-        maprRequests.statusChangedDate = maprRequests.statusChangedDate ? dayjs(maprRequests.statusChangedDate) : undefined;
+        maprRequests.statusDate = maprRequests.statusDate ? dayjs(maprRequests.statusDate) : undefined;
       });
     }
     return res;

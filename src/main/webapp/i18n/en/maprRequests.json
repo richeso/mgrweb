@@ -22,14 +22,10 @@
       "action": "Action",
       "name": "Name",
       "path": "Path",
-      "source": "Source",
-      "quota": "Quota",
-      "advisoryQuota": "Advisory Quota",
       "requestUser": "Request User",
       "requestDate": "Request Date",
-      "requestStatus": "Request Status",
-      "statusChangedDate": "Status Changed Date",
-      "previousStatus": "Previous Status"
+      "status": "Status",
+      "statusDate": "Status Date"
     }
   }
 }

@@ -6,14 +6,10 @@ export interface IMaprRequests {
   action?: string;
   name?: string;
   path?: string;
-  source?: string;
-  quota?: string;
-  advisoryQuota?: string;
   requestUser?: string;
   requestDate?: dayjs.Dayjs;
-  requestStatus?: string;
-  statusChangedDate?: dayjs.Dayjs;
-  previousStatus?: string;
+  status?: string;
+  statusDate?: dayjs.Dayjs;
 }
 
 export class MaprRequests implements IMaprRequests {
@@ -23,14 +19,10 @@ export class MaprRequests implements IMaprRequests {
     public action?: string,
     public name?: string,
     public path?: string,
-    public source?: string,
-    public quota?: string,
-    public advisoryQuota?: string,
     public requestUser?: string,
     public requestDate?: dayjs.Dayjs,
-    public requestStatus?: string,
-    public statusChangedDate?: dayjs.Dayjs,
-    public previousStatus?: string
+    public status?: string,
+    public statusDate?: dayjs.Dayjs
   ) {}
 }
 

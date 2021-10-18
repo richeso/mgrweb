@@ -90,77 +90,6 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.source" for="field_source">Source</label>
-          <input type="text" class="form-control" name="source" id="field_source" data-cy="source" formControlName="source" />
-          <div *ngIf="editForm.get('source')!.invalid && (editForm.get('source')!.dirty || editForm.get('source')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('source')?.errors?.required" jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('source')?.errors?.minlength"
-              jhiTranslate="entity.validation.minlength"
-              [translateValues]="{ min: 3 }"
-            >
-              This field is required to be at least 3 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.quota" for="field_quota">Quota</label>
-          <input type="text" class="form-control" name="quota" id="field_quota" data-cy="quota" formControlName="quota" />
-          <div *ngIf="editForm.get('quota')!.invalid && (editForm.get('quota')!.dirty || editForm.get('quota')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('quota')?.errors?.required" jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('quota')?.errors?.minlength"
-              jhiTranslate="entity.validation.minlength"
-              [translateValues]="{ min: 3 }"
-            >
-              This field is required to be at least 3 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.advisoryQuota" for="field_advisoryQuota"
-            >Advisory Quota</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="advisoryQuota"
-            id="field_advisoryQuota"
-            data-cy="advisoryQuota"
-            formControlName="advisoryQuota"
-          />
-          <div
-            *ngIf="
-              editForm.get('advisoryQuota')!.invalid && (editForm.get('advisoryQuota')!.dirty || editForm.get('advisoryQuota')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('advisoryQuota')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('advisoryQuota')?.errors?.minlength"
-              jhiTranslate="entity.validation.minlength"
-              [translateValues]="{ min: 3 }"
-            >
-              This field is required to be at least 3 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
           <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.requestUser" for="field_requestUser">Request User</label>
           <input
             type="text"
@@ -221,32 +150,15 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.requestStatus" for="field_requestStatus"
-            >Request Status</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="requestStatus"
-            id="field_requestStatus"
-            data-cy="requestStatus"
-            formControlName="requestStatus"
-          />
-          <div
-            *ngIf="
-              editForm.get('requestStatus')!.invalid && (editForm.get('requestStatus')!.dirty || editForm.get('requestStatus')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('requestStatus')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
+          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.status" for="field_status">Status</label>
+          <input type="text" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
             </small>
             <small
               class="form-text text-danger"
-              *ngIf="editForm.get('requestStatus')?.errors?.minlength"
+              *ngIf="editForm.get('status')?.errors?.minlength"
               jhiTranslate="entity.validation.minlength"
               [translateValues]="{ min: 3 }"
             >
@@ -256,74 +168,32 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.statusChangedDate" for="field_statusChangedDate"
-            >Status Changed Date</label
-          >
+          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.statusDate" for="field_statusDate">Status Date</label>
           <div class="d-flex">
             <input
-              id="field_statusChangedDate"
-              data-cy="statusChangedDate"
+              id="field_statusDate"
+              data-cy="statusDate"
               type="datetime-local"
               class="form-control"
-              name="statusChangedDate"
-              formControlName="statusChangedDate"
+              name="statusDate"
+              formControlName="statusDate"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
-          <div
-            *ngIf="
-              editForm.get('statusChangedDate')!.invalid &&
-              (editForm.get('statusChangedDate')!.dirty || editForm.get('statusChangedDate')!.touched)
-            "
-          >
+          <div *ngIf="editForm.get('statusDate')!.invalid && (editForm.get('statusDate')!.dirty || editForm.get('statusDate')!.touched)">
             <small
               class="form-text text-danger"
-              *ngIf="editForm.get('statusChangedDate')?.errors?.required"
+              *ngIf="editForm.get('statusDate')?.errors?.required"
               jhiTranslate="entity.validation.required"
             >
               This field is required.
             </small>
             <small
               class="form-text text-danger"
-              [hidden]="!editForm.get('statusChangedDate')?.errors?.ZonedDateTimelocal"
+              [hidden]="!editForm.get('statusDate')?.errors?.ZonedDateTimelocal"
               jhiTranslate="entity.validation.ZonedDateTimelocal"
             >
               This field should be a date and time.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.previousStatus" for="field_previousStatus"
-            >Previous Status</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="previousStatus"
-            id="field_previousStatus"
-            data-cy="previousStatus"
-            formControlName="previousStatus"
-          />
-          <div
-            *ngIf="
-              editForm.get('previousStatus')!.invalid && (editForm.get('previousStatus')!.dirty || editForm.get('previousStatus')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('previousStatus')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('previousStatus')?.errors?.minlength"
-              jhiTranslate="entity.validation.minlength"
-              [translateValues]="{ min: 3 }"
-            >
-              This field is required to be at least 3 characters.
             </small>
           </div>
         </div>

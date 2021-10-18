@@ -24,14 +24,10 @@ export class MaprRequestsUpdateComponent implements OnInit {
     action: [null, [Validators.required, Validators.minLength(3)]],
     name: [null, [Validators.required, Validators.minLength(3)]],
     path: [null, [Validators.required, Validators.minLength(3)]],
-    source: [null, [Validators.required, Validators.minLength(3)]],
-    quota: [null, [Validators.required, Validators.minLength(3)]],
-    advisoryQuota: [null, [Validators.required, Validators.minLength(3)]],
     requestUser: [null, [Validators.required, Validators.minLength(3)]],
     requestDate: [null, [Validators.required]],
-    requestStatus: [null, [Validators.required, Validators.minLength(3)]],
-    statusChangedDate: [null, [Validators.required]],
-    previousStatus: [null, [Validators.required, Validators.minLength(3)]],
+    status: [null, [Validators.required, Validators.minLength(3)]],
+    statusDate: [null, [Validators.required]],
   });
 
   constructor(protected maprRequestsService: MaprRequestsService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -41,7 +37,7 @@ export class MaprRequestsUpdateComponent implements OnInit {
       if (maprRequests.id === undefined) {
         const today = dayjs().startOf('day');
         maprRequests.requestDate = today;
-        maprRequests.statusChangedDate = today;
+        maprRequests.statusDate = today;
       }
 
       this.updateForm(maprRequests);
@@ -88,14 +84,10 @@ export class MaprRequestsUpdateComponent implements OnInit {
       action: maprRequests.action,
       name: maprRequests.name,
       path: maprRequests.path,
-      source: maprRequests.source,
-      quota: maprRequests.quota,
-      advisoryQuota: maprRequests.advisoryQuota,
       requestUser: maprRequests.requestUser,
       requestDate: maprRequests.requestDate ? maprRequests.requestDate.format(DATE_TIME_FORMAT) : null,
-      requestStatus: maprRequests.requestStatus,
-      statusChangedDate: maprRequests.statusChangedDate ? maprRequests.statusChangedDate.format(DATE_TIME_FORMAT) : null,
-      previousStatus: maprRequests.previousStatus,
+      status: maprRequests.status,
+      statusDate: maprRequests.statusDate ? maprRequests.statusDate.format(DATE_TIME_FORMAT) : null,
     });
   }
 
@@ -107,18 +99,12 @@ export class MaprRequestsUpdateComponent implements OnInit {
       action: this.editForm.get(['action'])!.value,
       name: this.editForm.get(['name'])!.value,
       path: this.editForm.get(['path'])!.value,
-      source: this.editForm.get(['source'])!.value,
-      quota: this.editForm.get(['quota'])!.value,
-      advisoryQuota: this.editForm.get(['advisoryQuota'])!.value,
       requestUser: this.editForm.get(['requestUser'])!.value,
       requestDate: this.editForm.get(['requestDate'])!.value
         ? dayjs(this.editForm.get(['requestDate'])!.value, DATE_TIME_FORMAT)
         : undefined,
-      requestStatus: this.editForm.get(['requestStatus'])!.value,
-      statusChangedDate: this.editForm.get(['statusChangedDate'])!.value
-        ? dayjs(this.editForm.get(['statusChangedDate'])!.value, DATE_TIME_FORMAT)
-        : undefined,
-      previousStatus: this.editForm.get(['previousStatus'])!.value,
+      status: this.editForm.get(['status'])!.value,
+      statusDate: this.editForm.get(['statusDate'])!.value ? dayjs(this.editForm.get(['statusDate'])!.value, DATE_TIME_FORMAT) : undefined,
     };
   }
 }

@@ -37,14 +37,10 @@
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.action">Action</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.name">Name</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.path">Path</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.source">Source</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.quota">Quota</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.advisoryQuota">Advisory Quota</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.requestUser">Request User</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.requestDate">Request Date</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.requestStatus">Request Status</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.statusChangedDate">Status Changed Date</span></th>
-          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.previousStatus">Previous Status</span></th>
+          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.status">Status</span></th>
+          <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.statusDate">Status Date</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -57,14 +53,10 @@
           <td>{{ maprRequests.action }}</td>
           <td>{{ maprRequests.name }}</td>
           <td>{{ maprRequests.path }}</td>
-          <td>{{ maprRequests.source }}</td>
-          <td>{{ maprRequests.quota }}</td>
-          <td>{{ maprRequests.advisoryQuota }}</td>
           <td>{{ maprRequests.requestUser }}</td>
           <td>{{ maprRequests.requestDate | formatMediumDatetime }}</td>
-          <td>{{ maprRequests.requestStatus }}</td>
-          <td>{{ maprRequests.statusChangedDate | formatMediumDatetime }}</td>
-          <td>{{ maprRequests.previousStatus }}</td>
+          <td>{{ maprRequests.status }}</td>
+          <td>{{ maprRequests.statusDate | formatMediumDatetime }}</td>
           <td class="text-right">
             <div class="btn-group">
               <button

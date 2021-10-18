@@ -1,43 +1,69 @@
 package com.mapr.mgrweb.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mapr.mgrweb.repository.MapRDBEntity;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.springframework.data.annotation.Id;
 
+/**
+ * A MaprRequests.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MaprRequests extends AbstractAuditingEntity implements Serializable, MapRDBEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     private String id;
-    private String type;
-    private String action;
-    private String name;
-    private String path;
-    private String source;
-    private String quota;
-    private String advisoryQuota;
-    private String requestUser;
-    private Instant requestDate;
-    private String requestStatus;
-    private Instant statusChangedDate;
-    private String previousStatus;
 
-    public MaprRequests() {
-        setId(null);
+    @NotNull
+    @Size(min = 3)
+    private String type;
+
+    @NotNull
+    @Size(min = 3)
+    private String action;
+
+    @NotNull
+    @Size(min = 3)
+    private String name;
+
+    @NotNull
+    @Size(min = 3)
+    private String path;
+
+    @NotNull
+    @Size(min = 3)
+    private String requestUser;
+
+    @NotNull
+    private Instant requestDate;
+
+    @NotNull
+    @Size(min = 3)
+    private String status;
+
+    @NotNull
+    private Instant statusDate;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public String getId() {
+        return this.id;
+    }
+
+    public MaprRequests id(String id) {
+        this.setId(id);
+        return this;
     }
 
     public void initNewId() {
         setId(UUID.randomUUID().toString());
-    }
-
-    @JsonProperty("id")
-    public String getId() {
-        return id;
     }
 
     public void setId(String id) {
@@ -53,115 +79,111 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
         this.id = _id;
     }
 
-    @JsonProperty("type")
     public String getType() {
-        return type;
+        return this.type;
+    }
+
+    public MaprRequests type(String type) {
+        this.setType(type);
+        return this;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
-    @JsonProperty("action")
     public String getAction() {
-        return action;
+        return this.action;
+    }
+
+    public MaprRequests action(String action) {
+        this.setAction(action);
+        return this;
     }
 
     public void setAction(String action) {
         this.action = action;
     }
 
-    @JsonProperty("name")
     public String getName() {
-        return name;
+        return this.name;
+    }
+
+    public MaprRequests name(String name) {
+        this.setName(name);
+        return this;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    @JsonProperty("path")
     public String getPath() {
-        return path;
+        return this.path;
+    }
+
+    public MaprRequests path(String path) {
+        this.setPath(path);
+        return this;
     }
 
     public void setPath(String path) {
         this.path = path;
     }
 
-    @JsonProperty("source")
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    @JsonProperty("quota")
-    public String getQuota() {
-        return quota;
-    }
-
-    public void setQuota(String quota) {
-        this.quota = quota;
-    }
-
-    @JsonProperty("advisoryQuota")
-    public String getAdvisoryQuota() {
-        return advisoryQuota;
-    }
-
-    public void setAdvisoryQuota(String advisoryQuota) {
-        this.advisoryQuota = advisoryQuota;
-    }
-
-    @JsonProperty("requestUser")
     public String getRequestUser() {
-        return requestUser;
+        return this.requestUser;
+    }
+
+    public MaprRequests requestUser(String requestUser) {
+        this.setRequestUser(requestUser);
+        return this;
     }
 
     public void setRequestUser(String requestUser) {
         this.requestUser = requestUser;
     }
 
-    @JsonProperty("requestDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     public Instant getRequestDate() {
-        return requestDate;
+        return this.requestDate;
+    }
+
+    public MaprRequests requestDate(Instant requestDate) {
+        this.setRequestDate(requestDate);
+        return this;
     }
 
     public void setRequestDate(Instant requestDate) {
         this.requestDate = requestDate;
     }
 
-    @JsonProperty("requestStatus")
-    public String getRequestStatus() {
-        return requestStatus;
+    public String getStatus() {
+        return this.status;
     }
 
-    public void setRequestStatus(String requestStatus) {
-        this.requestStatus = requestStatus;
+    public MaprRequests status(String status) {
+        this.setStatus(status);
+        return this;
     }
 
-    @JsonProperty("statusChangedDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
-    public Instant getStatusChangedDate() {
-        return statusChangedDate;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setStatusChangedDate(Instant statusChangedDate) {
-        this.statusChangedDate = statusChangedDate;
+    public Instant getStatusDate() {
+        return this.statusDate;
     }
 
-    @JsonProperty("previousStatus")
-    public String getPreviousStatus() {
-        return previousStatus;
+    public MaprRequests statusDate(Instant statusDate) {
+        this.setStatusDate(statusDate);
+        return this;
     }
 
-    public void setPreviousStatus(String previousStatus) {
-        this.previousStatus = previousStatus;
+    public void setStatusDate(Instant statusDate) {
+        this.statusDate = statusDate;
     }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -176,40 +198,23 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        StringBuilder rval = new StringBuilder();
-        rval
-            .append("{\"id\":\"")
-            .append(id)
-            .append("\",\"type\":\"")
-            .append(type)
-            .append("\",\"action:\"")
-            .append(action)
-            .append("\",\"name:\"")
-            .append(name)
-            .append("\",\"path:\"")
-            .append(path)
-            .append("\",\"source:\"")
-            .append(source)
-            .append("\",\"quota:\"")
-            .append(quota)
-            .append("\",\"advisoryQuota:\"")
-            .append(advisoryQuota)
-            .append("\",\"requestUser:\"")
-            .append(requestUser)
-            .append("\",\"requestDate:\"")
-            .append(requestDate)
-            .append("\",\"requestStatus:\"")
-            .append(requestStatus)
-            .append("\",\"statusChangedDate:\"")
-            .append(statusChangedDate)
-            .append("\",\"previousStatus:\"")
-            .append(previousStatus)
-            .append("\"}");
-        return rval.toString();
+        return "MaprRequests{" +
+            "id=" + getId() +
+            ", type='" + getType() + "'" +
+            ", action='" + getAction() + "'" +
+            ", name='" + getName() + "'" +
+            ", path='" + getPath() + "'" +
+            ", requestUser='" + getRequestUser() + "'" +
+            ", requestDate='" + getRequestDate() + "'" +
+            ", status='" + getStatus() + "'" +
+            ", statusDate='" + getStatusDate() + "'" +
+            "}";
     }
 }

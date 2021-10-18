@@ -30,14 +30,10 @@ describe('Service Tests', () => {
         action: 'AAAAAAA',
         name: 'AAAAAAA',
         path: 'AAAAAAA',
-        source: 'AAAAAAA',
-        quota: 'AAAAAAA',
-        advisoryQuota: 'AAAAAAA',
         requestUser: 'AAAAAAA',
         requestDate: currentDate,
-        requestStatus: 'AAAAAAA',
-        statusChangedDate: currentDate,
-        previousStatus: 'AAAAAAA',
+        status: 'AAAAAAA',
+        statusDate: currentDate,
       };
     });
 
@@ -46,7 +42,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             requestDate: currentDate.format(DATE_TIME_FORMAT),
-            statusChangedDate: currentDate.format(DATE_TIME_FORMAT),
+            statusDate: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -63,7 +59,7 @@ describe('Service Tests', () => {
           {
             id: 'ID',
             requestDate: currentDate.format(DATE_TIME_FORMAT),
-            statusChangedDate: currentDate.format(DATE_TIME_FORMAT),
+            statusDate: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -71,7 +67,7 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             requestDate: currentDate,
-            statusChangedDate: currentDate,
+            statusDate: currentDate,
           },
           returnedFromService
         );
@@ -91,14 +87,10 @@ describe('Service Tests', () => {
             action: 'BBBBBB',
             name: 'BBBBBB',
             path: 'BBBBBB',
-            source: 'BBBBBB',
-            quota: 'BBBBBB',
-            advisoryQuota: 'BBBBBB',
             requestUser: 'BBBBBB',
             requestDate: currentDate.format(DATE_TIME_FORMAT),
-            requestStatus: 'BBBBBB',
-            statusChangedDate: currentDate.format(DATE_TIME_FORMAT),
-            previousStatus: 'BBBBBB',
+            status: 'BBBBBB',
+            statusDate: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -106,7 +98,7 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             requestDate: currentDate,
-            statusChangedDate: currentDate,
+            statusDate: currentDate,
           },
           returnedFromService
         );
@@ -122,11 +114,9 @@ describe('Service Tests', () => {
         const patchObject = Object.assign(
           {
             name: 'BBBBBB',
-            source: 'BBBBBB',
-            quota: 'BBBBBB',
             requestUser: 'BBBBBB',
             requestDate: currentDate.format(DATE_TIME_FORMAT),
-            statusChangedDate: currentDate.format(DATE_TIME_FORMAT),
+            statusDate: currentDate.format(DATE_TIME_FORMAT),
           },
           new MaprRequests()
         );
@@ -136,7 +126,7 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             requestDate: currentDate,
-            statusChangedDate: currentDate,
+            statusDate: currentDate,
           },
           returnedFromService
         );
@@ -156,14 +146,10 @@ describe('Service Tests', () => {
             action: 'BBBBBB',
             name: 'BBBBBB',
             path: 'BBBBBB',
-            source: 'BBBBBB',
-            quota: 'BBBBBB',
-            advisoryQuota: 'BBBBBB',
             requestUser: 'BBBBBB',
             requestDate: currentDate.format(DATE_TIME_FORMAT),
-            requestStatus: 'BBBBBB',
-            statusChangedDate: currentDate.format(DATE_TIME_FORMAT),
-            previousStatus: 'BBBBBB',
+            status: 'BBBBBB',
+            statusDate: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -171,7 +157,7 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             requestDate: currentDate,
-            statusChangedDate: currentDate,
+            statusDate: currentDate,
           },
           returnedFromService
         );
@@ -221,7 +207,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique MaprRequests to an array', () => {
-          const maprRequestsArray: IMaprRequests[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: '57325fef-e484-4b7b-ba75-83bda446fee4' }];
+          const maprRequestsArray: IMaprRequests[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: '91e55732-5fef-4e48-8b7b-ba7583bda446' }];
           const maprRequestsCollection: IMaprRequests[] = [{ id: 'ABC' }];
           expectedResult = service.addMaprRequestsToCollectionIfMissing(maprRequestsCollection, ...maprRequestsArray);
           expect(expectedResult).toHaveLength(3);

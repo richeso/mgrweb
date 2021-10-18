@@ -30,18 +30,6 @@
         <dd>
           <span>{{ maprRequests.path }}</span>
         </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.source">Source</span></dt>
-        <dd>
-          <span>{{ maprRequests.source }}</span>
-        </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.quota">Quota</span></dt>
-        <dd>
-          <span>{{ maprRequests.quota }}</span>
-        </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.advisoryQuota">Advisory Quota</span></dt>
-        <dd>
-          <span>{{ maprRequests.advisoryQuota }}</span>
-        </dd>
         <dt><span jhiTranslate="mgrwebApp.maprRequests.requestUser">Request User</span></dt>
         <dd>
           <span>{{ maprRequests.requestUser }}</span>
@@ -50,17 +38,13 @@
         <dd>
           <span>{{ maprRequests.requestDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.requestStatus">Request Status</span></dt>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.status">Status</span></dt>
         <dd>
-          <span>{{ maprRequests.requestStatus }}</span>
+          <span>{{ maprRequests.status }}</span>
         </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.statusChangedDate">Status Changed Date</span></dt>
+        <dt><span jhiTranslate="mgrwebApp.maprRequests.statusDate">Status Date</span></dt>
         <dd>
-          <span>{{ maprRequests.statusChangedDate | formatMediumDatetime }}</span>
-        </dd>
-        <dt><span jhiTranslate="mgrwebApp.maprRequests.previousStatus">Previous Status</span></dt>
-        <dd>
-          <span>{{ maprRequests.previousStatus }}</span>
+          <span>{{ maprRequests.statusDate | formatMediumDatetime }}</span>
         </dd>
       </dl>
 
