@@ -1,4 +1,4 @@
-package com.mapr.mgrweb.web.rest;
+package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
@@ -9,13 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RestController
+@Service
 public class PamService {
 
     private final String URI_VOLUME_INFO = "/volume/info";
@@ -32,11 +33,7 @@ public class PamService {
     @Value("${api.host.mapr}")
     private String mapRHost;
 
-    @GetMapping("/pamapi/pam")
-    public ResponseEntity<String> pamauthenticate(@RequestParam Map<String, String> payload) {
-        System.out.println(payload);
-        String userid = (String) payload.get("userid");
-        String password = (String) payload.get("password");
+    public String authenticate(String userid, String password) {
         try {
             HttpHeaders headers = createAuthHeader(userid, password);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -49,10 +46,11 @@ public class PamService {
             ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
             ObjectMapper objectMapper = new ObjectMapper();
             String responseString = objectMapper.writeValueAsString(response.getBody());
-            return ResponseEntity.ok(responseString);
+            return responseString;
         } catch (Exception e) {
-            log.debug("Error Encountered: " + e.getMessage());
-            return ResponseEntity.ok("error encountered: " + e.getMessage());
+            String errormsg = "Error Encountered: " + e.getMessage();
+            log.debug(errormsg);
+            return errormsg;
         }
     }
 

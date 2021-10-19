@@ -2,6 +2,8 @@ package com.mapr.mgrweb.web.rest;
 
 import com.mapr.mgrweb.domain.MaprRequests;
 import com.mapr.mgrweb.repository.MaprRequestsRepository;
+import com.mapr.mgrweb.service.MapRService;
+import com.mapr.mgrweb.service.UserService;
 import com.mapr.mgrweb.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,6 +12,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +33,9 @@ public class MaprRequestsResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    @Autowired
+    private MapRService mapRService;
+
     private final MaprRequestsRepository maprRequestsRepository;
 
     public MaprRequestsResource(MaprRequestsRepository maprRequestsRepository) {
@@ -44,7 +50,7 @@ public class MaprRequestsResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/mapr-requests")
-    public ResponseEntity<MaprRequests> createMaprRequests(@Valid @RequestBody MaprRequests maprRequests) throws URISyntaxException {
+    public ResponseEntity<MaprRequests> createMaprRequests(@Valid @RequestBody MaprRequests maprRequests) throws Exception {
         log.debug("REST request to save MaprRequests : {}", maprRequests);
         if (maprRequests.getId() != null) {
             throw new BadRequestAlertException("A new maprRequests cannot already have an ID", ENTITY_NAME, "idexists");
@@ -54,7 +60,7 @@ public class MaprRequestsResource {
         maprRequestsRepository.save(maprRequests);
         Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
         MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();
-
+        mapRService.c8vol("mapr", "mapr", maprRequests.getName(), maprRequests.getPath());
         return ResponseEntity
             .created(new URI("/api/mapr-requests/" + maprRequests.get_id()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.get_id().toString()))
@@ -120,7 +126,8 @@ public class MaprRequestsResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/mapr-requests/{id}")
-    public ResponseEntity<Void> deleteMaprRequests(@PathVariable String id) {
+    public ResponseEntity<Void> deleteMaprRequests(@PathVariable String id) throws Exception {
+        mapRService.deletevol("mapr", "mapr", "hpetest");
         log.debug("REST request to delete MaprRequests : {}", id);
         maprRequestsRepository.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();

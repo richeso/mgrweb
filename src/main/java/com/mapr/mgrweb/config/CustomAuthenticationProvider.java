@@ -3,6 +3,7 @@ package com.mapr.mgrweb.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.domain.Authority;
 import com.mapr.mgrweb.domain.User;
+import com.mapr.mgrweb.service.PamService;
 import com.mapr.mgrweb.service.UserService;
 import java.util.*;
 import org.slf4j.Logger;
@@ -31,10 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private UserService userService;
 
     @Autowired
-    RestTemplate restTemplate;
-
-    @Value("${api.host.pam}")
-    private String pamHost;
+    private PamService pamService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -44,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
             String username = authentication.getName();
             String password = authentication.getCredentials().toString();
-            String authResults = pamAuthentication(username, password);
+            String authResults = pamService.authenticate(username, password);
             boolean isAuthenticated = !authResults.startsWith("Error");
 
             User user = userService.getUserWithAuthoritiesByLogin(username).orElse(user = null);
@@ -77,38 +75,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    public String pamAuthentication(String user, String passwd) throws AuthenticationException {
-        try {
-            HttpHeaders headers = createAuthHeader(user, passwd);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            HttpEntity request = new HttpEntity(headers);
-            UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(pamHost + "/api/paminfo")
-                .queryParam("userid", user)
-                .queryParam("password", passwd);
-            // make a request
-            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseString = objectMapper.writeValueAsString(response.getBody());
-            return responseString;
-        } catch (Exception e) {
-            log.debug("Error Encountered: " + e.getMessage());
-            return ("Error encountered: " + e.getMessage());
-        }
-    }
-
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
-
-    private HttpHeaders createAuthHeader(String username, String password) {
-        // create auth credentials
-        String authStr = username + ":" + password;
-        String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
-        // create headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-        return headers;
     }
 }
