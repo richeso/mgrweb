@@ -67,6 +67,10 @@ public class User extends AbstractAuditingEntity implements Serializable, MapRDB
         return id;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public void set_id(String _id) {
         this.id = _id;
@@ -123,6 +127,10 @@ public class User extends AbstractAuditingEntity implements Serializable, MapRDB
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isActivated() {
+        return activated;
     }
 
     public boolean getActivated() {

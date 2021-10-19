@@ -158,7 +158,7 @@ jhipster:
 
 api:
   host:
-    pam: http://192.168.8.168:8090
+    pam: http://demo.mapr.com:8090
     mapr: https://demo.mapr.com:8443/rest
 
 mapr:

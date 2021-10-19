@@ -5,14 +5,12 @@ import com.mapr.mgrweb.repository.MapRUserRepository;
 import com.mapr.mgrweb.security.SecurityUtils;
 import com.mapr.mgrweb.service.MailService;
 import com.mapr.mgrweb.service.UserService;
+import com.mapr.mgrweb.service.dto.AdminUserDTO;
 import com.mapr.mgrweb.service.dto.PasswordChangeDTO;
-import com.mapr.mgrweb.service.dto.UserDTO;
-import com.mapr.mgrweb.web.rest.errors.EmailAlreadyUsedException;
-import com.mapr.mgrweb.web.rest.errors.InvalidPasswordException;
-import com.mapr.mgrweb.web.rest.errors.LoginAlreadyUsedException;
+import com.mapr.mgrweb.web.rest.errors.*;
 import com.mapr.mgrweb.web.rest.vm.KeyAndPasswordVM;
 import com.mapr.mgrweb.web.rest.vm.ManagedUserVM;
-import java.util.Optional;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -37,14 +35,14 @@ public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
-    private final MapRUserRepository userRepository;
+    private final MapRUserRepository MapRUserRepository;
 
     private final UserService userService;
 
     private final MailService mailService;
 
-    public AccountResource(MapRUserRepository userRepository, UserService userService, MailService mailService) {
-        this.userRepository = userRepository;
+    public AccountResource(MapRUserRepository MapRUserRepository, UserService userService, MailService mailService) {
+        this.MapRUserRepository = MapRUserRepository;
         this.userService = userService;
         this.mailService = mailService;
     }
@@ -60,7 +58,7 @@ public class AccountResource {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
+        if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
@@ -100,10 +98,10 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @GetMapping("/account")
-    public UserDTO getAccount() {
+    public AdminUserDTO getAccount() {
         return userService
             .getUserWithAuthorities()
-            .map(UserDTO::new)
+            .map(AdminUserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 
@@ -115,15 +113,15 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @PostMapping("/account")
-    public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
+    public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
         String userLogin = SecurityUtils
             .getCurrentUserLogin()
             .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        Optional<User> existingUser = MapRUserRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
-        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        Optional<User> user = MapRUserRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
@@ -144,7 +142,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/change-password")
     public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
-        if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
+        if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
@@ -163,7 +161,7 @@ public class AccountResource {
         } else {
             // Pretend the request has been successful to prevent checking which emails really exist
             // but log that an invalid attempt has been made
-            log.warn("Password reset requested for non existing mail '{}'", mail);
+            log.warn("Password reset requested for non existing mail");
         }
     }
 
@@ -176,7 +174,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/finish")
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
+        if (isPasswordLengthInvalid(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
@@ -186,11 +184,11 @@ public class AccountResource {
         }
     }
 
-    private static boolean checkPasswordLength(String password) {
+    private static boolean isPasswordLengthInvalid(String password) {
         return (
-            !StringUtils.isEmpty(password) &&
-            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
-            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH
+            StringUtils.isEmpty(password) ||
+            password.length() < ManagedUserVM.PASSWORD_MIN_LENGTH ||
+            password.length() > ManagedUserVM.PASSWORD_MAX_LENGTH
         );
     }
 }

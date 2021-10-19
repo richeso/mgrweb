@@ -12,6 +12,7 @@ import com.mapr.mgrweb.repository.MapRDBAuthorityRepository;
 import com.mapr.mgrweb.repository.MapRUserRepository;
 import com.mapr.mgrweb.security.AuthoritiesConstants;
 import com.mapr.mgrweb.service.UserService;
+import com.mapr.mgrweb.service.dto.AdminUserDTO;
 import com.mapr.mgrweb.service.dto.PasswordChangeDTO;
 import com.mapr.mgrweb.service.dto.UserDTO;
 import com.mapr.mgrweb.web.rest.vm.KeyAndPasswordVM;
@@ -89,7 +90,7 @@ class AccountResourceIT {
         Set<String> authorities = new HashSet<>();
         authorities.add(AuthoritiesConstants.ADMIN);
 
-        UserDTO user = new UserDTO();
+        AdminUserDTO user = new AdminUserDTO();
         user.setLogin(TEST_USER_LOGIN);
         user.setFirstName("john");
         user.setLastName("doe");
@@ -341,7 +342,7 @@ class AccountResourceIT {
         assertThat(testUser4.get().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.get().setActivated(true);
-        userService.updateUser((new UserDTO(testUser4.get())));
+        userService.updateUser((new AdminUserDTO(testUser4.get())));
 
         // Register 4th (already activated) user
         restAccountMockMvc
