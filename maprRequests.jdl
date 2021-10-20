@@ -3,12 +3,8 @@ entity MaprRequests {
   action String required minlength(3)
   name String required minlength(3)
   path String required minlength(3)
-  source String required minlength(3) 
-  quota String required minlength(3)
-  advisoryQuota String required minlength(3)
   requestUser String required minlength(3)
   requestDate Instant required
-  requestStatus String required minlength(3)
-  statusChangedDate Instant required
-  previousStatus String required minlength(3)
+  status String required minlength(3)
+  statusDate Instant required 
 }
