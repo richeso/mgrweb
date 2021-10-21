@@ -21,34 +21,26 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
     @Id
     private String id;
 
-    @NotNull
     @Size(min = 3)
     private String type;
 
-    @NotNull
     @Size(min = 3)
     private String action;
 
-    @NotNull
     @Size(min = 3)
     private String name;
 
-    @NotNull
     @Size(min = 3)
     private String path;
 
-    @NotNull
     @Size(min = 3)
     private String requestUser;
 
-    @NotNull
     private Instant requestDate;
 
-    @NotNull
     @Size(min = 3)
     private String status;
 
-    @NotNull
     private Instant statusDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

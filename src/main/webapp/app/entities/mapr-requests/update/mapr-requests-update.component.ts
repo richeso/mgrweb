@@ -20,14 +20,8 @@ export class MaprRequestsUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    type: [null, [Validators.required, Validators.minLength(3)]],
-    action: [null, [Validators.required, Validators.minLength(3)]],
     name: [null, [Validators.required, Validators.minLength(3)]],
     path: [null, [Validators.required, Validators.minLength(3)]],
-    requestUser: [null, [Validators.required, Validators.minLength(3)]],
-    requestDate: [null, [Validators.required]],
-    status: [null, [Validators.required, Validators.minLength(3)]],
-    statusDate: [null, [Validators.required]],
   });
 
   constructor(protected maprRequestsService: MaprRequestsService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -36,8 +30,10 @@ export class MaprRequestsUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ maprRequests }) => {
       if (maprRequests.id === undefined) {
         const today = dayjs().startOf('day');
-        maprRequests.requestDate = today;
-        maprRequests.statusDate = today;
+        //       maprRequests.requestDate = today;
+        //       maprRequests.statusDate = today;
+        //       maprRequests.action = "create volume";
+        //        maprRequests.type = "volume create";
       }
 
       this.updateForm(maprRequests);
@@ -79,32 +75,16 @@ export class MaprRequestsUpdateComponent implements OnInit {
 
   protected updateForm(maprRequests: IMaprRequests): void {
     this.editForm.patchValue({
-      id: maprRequests.id,
-      type: maprRequests.type,
-      action: maprRequests.action,
       name: maprRequests.name,
       path: maprRequests.path,
-      requestUser: maprRequests.requestUser,
-      requestDate: maprRequests.requestDate ? maprRequests.requestDate.format(DATE_TIME_FORMAT) : null,
-      status: maprRequests.status,
-      statusDate: maprRequests.statusDate ? maprRequests.statusDate.format(DATE_TIME_FORMAT) : null,
     });
   }
 
   protected createFromForm(): IMaprRequests {
     return {
       ...new MaprRequests(),
-      id: this.editForm.get(['id'])!.value,
-      type: this.editForm.get(['type'])!.value,
-      action: this.editForm.get(['action'])!.value,
       name: this.editForm.get(['name'])!.value,
       path: this.editForm.get(['path'])!.value,
-      requestUser: this.editForm.get(['requestUser'])!.value,
-      requestDate: this.editForm.get(['requestDate'])!.value
-        ? dayjs(this.editForm.get(['requestDate'])!.value, DATE_TIME_FORMAT)
-        : undefined,
-      status: this.editForm.get(['status'])!.value,
-      statusDate: this.editForm.get(['statusDate'])!.value ? dayjs(this.editForm.get(['statusDate'])!.value, DATE_TIME_FORMAT) : undefined,
     };
   }
 }

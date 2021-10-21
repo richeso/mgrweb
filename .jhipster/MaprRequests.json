@@ -4,13 +4,13 @@
     {
       "fieldName": "type",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "action",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
@@ -28,47 +28,47 @@
     {
       "fieldName": "source",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "quota",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "advisoryQuota",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "requestUser",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "requestDate",
       "fieldType": "Instant",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["optional"]
     },
     {
       "fieldName": "requestStatus",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     },
     {
       "fieldName": "statusChangedDate",
       "fieldType": "Instant",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["optional"]
     },
     {
       "fieldName": "previousStatus",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRules": ["optional", "minlength"],
       "fieldValidateRulesMinlength": "3"
     }
   ],

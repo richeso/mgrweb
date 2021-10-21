@@ -80,8 +80,8 @@ export class MaprRequestsService {
 
   protected convertDateFromClient(maprRequests: IMaprRequests): IMaprRequests {
     return Object.assign({}, maprRequests, {
-      requestDate: maprRequests.requestDate?.isValid() ? maprRequests.requestDate.toJSON() : undefined,
-      statusDate: maprRequests.statusDate?.isValid() ? maprRequests.statusDate.toJSON() : undefined,
+      // requestDate: maprRequests.requestDate?.isValid() ? maprRequests.requestDate.toJSON() : undefined,
+      //  statusDate: maprRequests.statusDate?.isValid() ? maprRequests.statusDate.toJSON() : undefined,
     });
   }
 

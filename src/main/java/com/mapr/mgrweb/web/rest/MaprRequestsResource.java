@@ -9,6 +9,7 @@ import com.mapr.mgrweb.service.UserService;
 import com.mapr.mgrweb.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
@@ -66,6 +67,20 @@ public class MaprRequestsResource {
             throw new BadRequestAlertException("A new maprRequests cannot already have an ID", ENTITY_NAME, "idexists");
         } else {
             maprRequests.initNewId();
+            maprRequests.setAction("Create Volume");
+
+            HttpSession session = httpSessionFactory.getObject();
+            String username = (String) session.getAttribute(Constants.USERNAME);
+
+            maprRequests.setCreatedBy(username);
+            maprRequests.setRequestUser(username);
+            maprRequests.setRequestDate(new Date(System.currentTimeMillis()).toInstant());
+            maprRequests.setCreatedDate(new Date(System.currentTimeMillis()).toInstant());
+            maprRequests.setLastModifiedBy(username);
+            maprRequests.setStatus(Constants.CREATED_STATUS);
+            maprRequests.setLastModifiedDate(new Date(System.currentTimeMillis()).toInstant());
+            maprRequests.setType("Volume Create");
+            maprRequests.setStatusDate(new Date(System.currentTimeMillis()).toInstant());
         }
         maprRequestsRepository.save(maprRequests);
         Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());

@@ -2,27 +2,27 @@ import * as dayjs from 'dayjs';
 
 export interface IMaprRequests {
   id?: string;
-  type?: string;
-  action?: string;
-  name?: string;
-  path?: string;
-  requestUser?: string;
-  requestDate?: dayjs.Dayjs;
-  status?: string;
-  statusDate?: dayjs.Dayjs;
+  type?: string | null;
+  action?: string | null;
+  name?: string | null;
+  path?: string | null;
+  requestUser?: string | null;
+  requestDate?: dayjs.Dayjs | null;
+  status?: string | null;
+  statusDate?: dayjs.Dayjs | null;
 }
 
 export class MaprRequests implements IMaprRequests {
   constructor(
     public id?: string,
-    public type?: string,
-    public action?: string,
-    public name?: string,
-    public path?: string,
-    public requestUser?: string,
-    public requestDate?: dayjs.Dayjs,
-    public status?: string,
-    public statusDate?: dayjs.Dayjs
+    public type?: string | null,
+    public action?: string | null,
+    public name?: string | null,
+    public path?: string | null,
+    public requestUser?: string | null,
+    public requestDate?: dayjs.Dayjs | null,
+    public status?: string | null,
+    public statusDate?: dayjs.Dayjs | null
   ) {}
 }
 
