@@ -44,8 +44,12 @@ public class PamService {
                 .queryParam("password", password);
             // make a request
             ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseString = objectMapper.writeValueAsString(response.getBody());
+            String responseBody = response.getBody().toString();
+            String responseString = responseBody;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                responseString = objectMapper.writeValueAsString(response.getBody());
+            } catch (Exception e) {}
             return responseString;
         } catch (Exception e) {
             String errormsg = "Error Encountered: " + e.getMessage();

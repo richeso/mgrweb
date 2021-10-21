@@ -11,8 +11,11 @@ public final class Constants {
     public static final String SYSTEM_ACCOUNT = "system";
     public static final String DEFAULT_LANGUAGE = "en";
     public static final String ANONYMOUS_USER = "anonymoususer";
-    public static final String USERNAME = "username";
-    public static final String USERPASS = "userpass";
+    public static final String USERNAME = "userid";
+    public static final String USERPASS = "password";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ADMIN_USERNAME = "root";
 
     private Constants() {}
 }

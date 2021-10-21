@@ -91,16 +91,3 @@ jhipster:
 # ===================================================================
 
 # application:
-
-api:
-  host:
-    pam: http://demo.mapr.com:8090
-    mapr: http://demo.mapr.com:8090
-
-mapr:
-  tables:
-    customer: /user/msapp/customerMap
-    usersTable: /user/msapp/users
-    authoritiesTable: /user/msapp/authorities
-    auditeEventsTable: /user/msapp/audit
-    maprRequests: /user/msapp/maprRequests

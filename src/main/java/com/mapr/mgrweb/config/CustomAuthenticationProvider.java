@@ -5,6 +5,7 @@ import com.mapr.mgrweb.domain.Authority;
 import com.mapr.mgrweb.domain.User;
 import com.mapr.mgrweb.service.PamService;
 import com.mapr.mgrweb.service.UserService;
+import com.mapr.mgrweb.service.dto.AdminUserDTO;
 import java.util.*;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -49,14 +50,32 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             String password = authentication.getCredentials().toString();
 
             String authResults = pamService.authenticate(username, password);
-            boolean isAuthenticated = !authResults.startsWith("Error");
-
-            User user = userService.getUserWithAuthoritiesByLogin(username).orElse(user = null);
+            boolean isAuthenticated = authResults.indexOf("Error") < 0;
 
             if (isAuthenticated) {
+                User user = userService.getUserWithAuthoritiesByLogin(username).orElse(user = null);
                 if (user == null) {
                     // Auto Register User - later -- for now throw exception
-                    throw new BadCredentialsException("Invalid username or password");
+                    // instantiate new user
+                    AdminUserDTO userDTO = new AdminUserDTO();
+                    userDTO.setActivated(true);
+                    userDTO.setFirstName(username);
+                    userDTO.setLastName(username);
+                    userDTO.setCreatedBy(username);
+                    userDTO.setLogin(username);
+                    userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
+                    userDTO.setEmail(username + "@mail.com");
+                    userDTO.setCreatedDate(new Date(System.currentTimeMillis()).toInstant());
+                    userDTO.setLastModifiedBy(username);
+                    userDTO.setLastModifiedDate(userDTO.getCreatedDate());
+                    userDTO.setAuthorities(new HashSet<>());
+                    userDTO.getAuthorities().add(Constants.ROLE_USER);
+                    if (username.equals(Constants.ADMIN_USERNAME)) userDTO.getAuthorities().add(Constants.ROLE_ADMIN);
+                    try {
+                        user = userService.createUser(userDTO);
+                    } catch (Exception e) {
+                        throw new BadCredentialsException("Unable to Create Your Registration Record : " + username);
+                    }
                 }
                 HttpSession session = httpSessionFactory.getObject();
                 session.setAttribute(Constants.USERPASS, password);
@@ -77,7 +96,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 //return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
                 return token;
             } else {
-                throw new BadCredentialsException("Invalid username or password");
+                throw new BadCredentialsException(authResults);
             }
         } catch (Exception e) {
             throw new AuthenticationServiceException("Failed to login", e);
