@@ -74,8 +74,8 @@ class UserResourceIT {
 
     @BeforeEach
     public void setup() {
-        cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(MapRUserRepository.USERS_BY_EMAIL_CACHE).clear();
+        // cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).clear();
+        // cacheManager.getCache(MapRUserRepository.USERS_BY_EMAIL_CACHE).clear();
     }
 
     /**
@@ -254,7 +254,7 @@ class UserResourceIT {
         // Initialize the database
         userRepository.save(user);
 
-        assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
+        // assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
         // Get the user
         restUserMockMvc
@@ -267,8 +267,7 @@ class UserResourceIT {
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
             .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGEURL))
             .andExpect(jsonPath("$.langKey").value(DEFAULT_LANGKEY));
-
-        assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNotNull();
+        //  assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNotNull();
     }
 
     @Test
@@ -462,7 +461,7 @@ class UserResourceIT {
             .perform(delete("/api/admin/users/{login}", user.getLogin()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
+        // assertThat(cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
         // Validate the database is empty
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));

@@ -47,9 +47,10 @@ public class MapRService {
                 .queryParam("path", volumePath);
 
             // make a request
-            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, request, Map.class);
             ObjectMapper objectMapper = new ObjectMapper();
             String responseString = objectMapper.writeValueAsString(response.getBody());
+            log.debug("MaprResult = " + responseString);
             return responseString;
         } catch (Exception e) {
             //e.printStackTrace();
@@ -70,10 +71,10 @@ public class MapRService {
                 .queryParam("password", password)
                 .queryParam("volume", volume);
             // make a request
-            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
-
+            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, request, Map.class);
             ObjectMapper objectMapper = new ObjectMapper();
             String responseString = objectMapper.writeValueAsString(response.getBody());
+            log.debug("MaprResult = " + responseString);
             return responseString;
         } catch (Exception e) {
             //e.printStackTrace();
@@ -94,7 +95,7 @@ public class MapRService {
                 .queryParam("password", password)
                 .queryParam("volume", volume);
             // make a request
-            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, request, Map.class);
             ObjectMapper objectMapper = new ObjectMapper();
             String responseString = objectMapper.writeValueAsString(response.getBody());
             return responseString;

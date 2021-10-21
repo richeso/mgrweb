@@ -41,8 +41,8 @@ class PublicUserResourceIT {
 
     @BeforeEach
     public void setup() {
-        cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(MapRUserRepository.USERS_BY_EMAIL_CACHE).clear();
+        //   cacheManager.getCache(MapRUserRepository.USERS_BY_LOGIN_CACHE).clear();
+        //   cacheManager.getCache(MapRUserRepository.USERS_BY_EMAIL_CACHE).clear();
     }
 
     @BeforeEach

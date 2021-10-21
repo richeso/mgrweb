@@ -6,8 +6,10 @@ import com.mapr.mgrweb.domain.User;
 import com.mapr.mgrweb.service.PamService;
 import com.mapr.mgrweb.service.UserService;
 import java.util.*;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -34,6 +36,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private PamService pamService;
 
+    @Autowired
+    ObjectFactory<HttpSession> httpSessionFactory;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
@@ -42,6 +47,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
             String username = authentication.getName();
             String password = authentication.getCredentials().toString();
+
             String authResults = pamService.authenticate(username, password);
             boolean isAuthenticated = !authResults.startsWith("Error");
 
@@ -52,7 +58,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     // Auto Register User - later -- for now throw exception
                     throw new BadCredentialsException("Invalid username or password");
                 }
-
+                HttpSession session = httpSessionFactory.getObject();
+                session.setAttribute(Constants.USERPASS, password);
+                session.setAttribute(Constants.USERNAME, username);
                 List<GrantedAuthority> grantedAuths = new ArrayList<>();
                 for (Authority authority : user.getAuthorities()) grantedAuths.add(new SimpleGrantedAuthority(authority.getName()));
 
@@ -61,6 +69,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     authentication.getCredentials(),
                     grantedAuths
                 );
+
                 token.setDetails(authentication.getDetails());
 
                 //List<GrantedAuthority> grantedAuths = new ArrayList<>();

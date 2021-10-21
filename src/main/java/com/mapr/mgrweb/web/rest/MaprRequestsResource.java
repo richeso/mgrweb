@@ -1,6 +1,8 @@
 package com.mapr.mgrweb.web.rest;
 
+import com.mapr.mgrweb.config.Constants;
 import com.mapr.mgrweb.domain.MaprRequests;
+import com.mapr.mgrweb.domain.User;
 import com.mapr.mgrweb.repository.MaprRequestsRepository;
 import com.mapr.mgrweb.service.MapRService;
 import com.mapr.mgrweb.service.UserService;
@@ -9,12 +11,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -35,6 +42,9 @@ public class MaprRequestsResource {
 
     @Autowired
     private MapRService mapRService;
+
+    @Autowired
+    ObjectFactory<HttpSession> httpSessionFactory;
 
     private final MaprRequestsRepository maprRequestsRepository;
 
@@ -60,7 +70,12 @@ public class MaprRequestsResource {
         maprRequestsRepository.save(maprRequests);
         Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
         MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();
-        mapRService.c8vol("mapr", "mapr", maprRequests.getName(), maprRequests.getPath());
+
+        HttpSession session = httpSessionFactory.getObject();
+        String userid = (String) session.getAttribute(Constants.USERNAME);
+        String password = (String) session.getAttribute(Constants.USERPASS);
+
+        mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
         return ResponseEntity
             .created(new URI("/api/mapr-requests/" + maprRequests.get_id()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.get_id().toString()))
@@ -127,7 +142,15 @@ public class MaprRequestsResource {
      */
     @DeleteMapping("/mapr-requests/{id}")
     public ResponseEntity<Void> deleteMaprRequests(@PathVariable String id) throws Exception {
-        mapRService.deletevol("mapr", "mapr", "hpetest");
+        Optional<MaprRequests> maprRequests = maprRequestsRepository.findById(id);
+        MaprRequests aRequest = maprRequests.get();
+
+        if (aRequest != null) {
+            HttpSession session = httpSessionFactory.getObject();
+            String userid = (String) session.getAttribute(Constants.USERNAME);
+            String password = (String) session.getAttribute(Constants.USERPASS);
+            mapRService.deletevol(userid, password, aRequest.getName());
+        }
         log.debug("REST request to delete MaprRequests : {}", id);
         maprRequestsRepository.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();

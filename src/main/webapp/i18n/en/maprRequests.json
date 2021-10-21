@@ -2,30 +2,30 @@
   "mgrwebApp": {
     "maprRequests": {
       "home": {
-        "title": "Mapr Requests",
+        "title": "Volume Requests",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Mapr Requests",
-        "createOrEditLabel": "Create or edit a Mapr Requests",
-        "notFound": "No Mapr Requests found"
+        "createLabel": "Create a new Volume Request",
+        "createOrEditLabel": "Create Volume Request",
+        "notFound": "No Volume Requests found"
       },
-      "created": "A new Mapr Requests is created with identifier {{ param }}",
-      "updated": "A Mapr Requests is updated with identifier {{ param }}",
-      "deleted": "A Mapr Requests is deleted with identifier {{ param }}",
+      "created": "A new Volume has been Created with identifier {{ param }}",
+      "updated": "A Volume Request is updated with identifier {{ param }}",
+      "deleted": "A Volume has been deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Mapr Requests {{ id }}?"
+        "question": "Are you sure you want to delete This Volume {{ id }}?"
       },
       "detail": {
-        "title": "Mapr Requests"
+        "title": "Volume Requests"
       },
       "id": "ID",
       "type": "Type",
       "action": "Action",
-      "name": "Name",
+      "name": "Volume",
       "path": "Path",
-      "requestUser": "Request User",
-      "requestDate": "Request Date",
-      "status": "Status",
-      "statusDate": "Status Date"
+      "requestUser": "Requested By",
+      "requestDate": "Requested Date",
+      "status": "Request Status",
+      "statusDate": "Request Status Date"
     }
   }
 }

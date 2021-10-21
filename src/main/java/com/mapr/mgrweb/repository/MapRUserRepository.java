@@ -14,7 +14,6 @@ import org.ojai.store.Query;
 import org.ojai.store.QueryCondition;
 import org.ojai.types.OTimestamp;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +24,6 @@ public class MapRUserRepository extends MapRDBRepository<User> {
 
     @Value("${mapr.tables.usersTable}")
     private String usersTable;
-
-    public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
-
-    public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
     @Override
     public String getTable() {
@@ -82,7 +77,6 @@ public class MapRUserRepository extends MapRDBRepository<User> {
         return findFirst(condition);
     }
 
-    @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
     public Optional<User> findOneByEmailIgnoreCase(String email) {
         QueryCondition condition = mapRDBSession
             .getConnection()
@@ -93,7 +87,6 @@ public class MapRUserRepository extends MapRDBRepository<User> {
         return findFirst(condition);
     }
 
-    @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
     public Optional<User> findOneByLogin(String login) {
         QueryCondition condition = mapRDBSession.getConnection().newCondition().is("login", QueryCondition.Op.EQUAL, login).build();
 
