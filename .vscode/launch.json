@@ -10,7 +10,7 @@
             "projectName": "mgrweb"
         },
         {
-            "name": "Launch ng serve & Chrome",
+            "name": "Debug UI",
             "type": "chrome",
             "request": "launch",
             "preLaunchTask": "npm: start",

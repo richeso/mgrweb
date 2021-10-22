@@ -10,6 +10,11 @@ import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import { IMaprRequests, MaprRequests } from '../mapr-requests.model';
 import { MaprRequestsService } from '../service/mapr-requests.service';
+import { Account } from 'app/core/auth/account.model';
+import { AccountService } from 'app/core/auth/account.service';
+import { LoginService } from 'app/login/login.service';
+import { ProfileService } from 'app/layouts/profiles/profile.service';
+import { AlertService, Alert } from 'app/core/util/alert.service';
 
 @Component({
   selector: 'jhi-mapr-requests-update',
@@ -17,6 +22,8 @@ import { MaprRequestsService } from '../service/mapr-requests.service';
 })
 export class MaprRequestsUpdateComponent implements OnInit {
   isSaving = false;
+  account: Account | null = null;
+  alerts: Alert[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -24,7 +31,13 @@ export class MaprRequestsUpdateComponent implements OnInit {
     path: [null, [Validators.required, Validators.minLength(3)]],
   });
 
-  constructor(protected maprRequestsService: MaprRequestsService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
+  constructor(
+    protected maprRequestsService: MaprRequestsService,
+    protected activatedRoute: ActivatedRoute,
+    protected fb: FormBuilder,
+    protected accountService: AccountService,
+    protected alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ maprRequests }) => {
@@ -36,6 +49,7 @@ export class MaprRequestsUpdateComponent implements OnInit {
         //        maprRequests.type = "volume create";
       }
 
+      this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
       this.updateForm(maprRequests);
     });
   }

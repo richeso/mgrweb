@@ -32,6 +32,9 @@
 
         <div class="form-group">
           <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.path" for="field_path">Path</label>
+          <span *ngIf="account">
+            <B>(/user/{{ account.login }})</B></span
+          >
           <input type="text" class="form-control" name="path" id="field_path" data-cy="path" formControlName="path" />
           <div *ngIf="editForm.get('path')!.invalid && (editForm.get('path')!.dirty || editForm.get('path')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('path')?.errors?.required" jhiTranslate="entity.validation.required">

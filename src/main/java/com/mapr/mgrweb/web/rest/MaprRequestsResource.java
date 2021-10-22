@@ -71,7 +71,10 @@ public class MaprRequestsResource {
 
             HttpSession session = httpSessionFactory.getObject();
             String username = (String) session.getAttribute(Constants.USERNAME);
-
+            String path = maprRequests.getPath();
+            String volpath = "";
+            if (path.startsWith("/")) volpath = "/user/" + username + path; else volpath = "/user/" + username + "/" + path;
+            maprRequests.setPath(volpath);
             maprRequests.setCreatedBy(username);
             maprRequests.setRequestUser(username);
             maprRequests.setRequestDate(new Date(System.currentTimeMillis()).toInstant());
@@ -82,15 +85,19 @@ public class MaprRequestsResource {
             maprRequests.setType("Volume Create");
             maprRequests.setStatusDate(new Date(System.currentTimeMillis()).toInstant());
         }
-        maprRequestsRepository.save(maprRequests);
-        Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
-        MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();
 
         HttpSession session = httpSessionFactory.getObject();
         String userid = (String) session.getAttribute(Constants.USERNAME);
         String password = (String) session.getAttribute(Constants.USERPASS);
 
-        mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
+        String c8volResult = mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
+        if (c8volResult.toUpperCase().indexOf("ERROR") >= 0) {
+            throw new BadRequestAlertException(c8volResult, ENTITY_NAME, maprRequests.getName());
+        }
+        maprRequestsRepository.save(maprRequests);
+        Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
+        MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();
+
         return ResponseEntity
             .created(new URI("/api/mapr-requests/" + maprRequests.get_id()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.get_id().toString()))
@@ -164,10 +171,14 @@ public class MaprRequestsResource {
             HttpSession session = httpSessionFactory.getObject();
             String userid = (String) session.getAttribute(Constants.USERNAME);
             String password = (String) session.getAttribute(Constants.USERPASS);
-            mapRService.deletevol(userid, password, aRequest.getName());
+
+            String deleteResults = mapRService.deletevol(userid, password, aRequest.getName());
+            if (deleteResults.toUpperCase().indexOf("ERROR") >= 0) {
+                throw new BadRequestAlertException(deleteResults, ENTITY_NAME, aRequest.getName());
+            }
+            maprRequestsRepository.delete(id);
         }
         log.debug("REST request to delete MaprRequests : {}", id);
-        maprRequestsRepository.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
 }
