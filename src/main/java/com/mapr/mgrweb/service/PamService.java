@@ -43,7 +43,7 @@ public class PamService {
                 .queryParam("userid", userid)
                 .queryParam("password", password);
             // make a request
-            ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.GET, request, Map.class);
             String responseBody = response.getBody().toString();
             String responseString = responseBody;
             try {
