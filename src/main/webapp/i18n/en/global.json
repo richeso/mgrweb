@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "HPE - MapR Management Request Utility",
+    "title": "HPE - MapR Request Utility",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -49,12 +49,12 @@
       "info": {
         "authenticated": {
           "prefix": "Please ",
-          "link": "sign into this Utility Site ",
-          "suffix": " Using your MapR Cluster Unix Account Credentials"
+          "link": "Sign in ",
+          "suffix": " using your MapR Unix Account Credentials"
         },
         "register": {
-          "noaccount": "If You don't have a MapR Unix account yet ",
-          "link": "Please create a Jira ticket to request for a new MapR Unix account"
+          "noaccount": "Don't have a MapR account yet ? ",
+          "link": " Please create a Jira Request for one"
         }
       },
       "error": {
