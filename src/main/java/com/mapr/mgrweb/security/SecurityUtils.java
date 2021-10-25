@@ -25,6 +25,11 @@ public final class SecurityUtils {
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
 
+    public static MgrWebToken getMgrWebToken() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return (MgrWebToken) securityContext.getAuthentication();
+    }
+
     private static String extractPrincipal(Authentication authentication) {
         if (authentication == null) {
             return null;

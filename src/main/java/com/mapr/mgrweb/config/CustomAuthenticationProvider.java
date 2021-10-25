@@ -3,6 +3,7 @@ package com.mapr.mgrweb.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.domain.Authority;
 import com.mapr.mgrweb.domain.User;
+import com.mapr.mgrweb.security.MgrWebToken;
 import com.mapr.mgrweb.service.PamService;
 import com.mapr.mgrweb.service.UserService;
 import com.mapr.mgrweb.service.dto.AdminUserDTO;
@@ -83,12 +84,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 List<GrantedAuthority> grantedAuths = new ArrayList<>();
                 for (Authority authority : user.getAuthorities()) grantedAuths.add(new SimpleGrantedAuthority(authority.getName()));
 
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    user.getLogin(),
-                    authentication.getCredentials(),
-                    grantedAuths
-                );
-
+                MgrWebToken token = new MgrWebToken(user.getLogin(), authentication.getCredentials(), grantedAuths);
+                token.setUserpw(user.getPassword());
                 token.setDetails(authentication.getDetails());
 
                 //List<GrantedAuthority> grantedAuths = new ArrayList<>();
