@@ -6,7 +6,7 @@ Main page styles
   display: inline-block;
   width: 347px;
   height: 497px;
-  background: url('../../content/images/jhipster_family_member_0.svg') no-repeat center top;
+  background: url('../../content/images/tech1.jpg') no-repeat center top;
   background-size: contain;
 }
 
@@ -17,7 +17,19 @@ Main page styles
   only screen and (min-resolution: 192dpi),
   only screen and (min-resolution: 2dppx) {
   .hipster {
-    background: url('../../content/images/jhipster_family_member_0.svg') no-repeat center top;
+    background: url('../../content/images/tech1.jpg') no-repeat center top;
     background-size: contain;
   }
+}
+
+.home-number {
+  text-align: center;
+  padding-top: 5%;
+  font-size: 55px;
+  font-weight: bold;
+  color: #18bc9c;
+}
+
+.align-left {
+  padding-left: 0px;
 }

@@ -158,8 +158,8 @@ jhipster:
 
 api:
   host:
-    pam: http://demo.mapr.com:8090
-    mapr: http://demo.mapr.com:8090
+    pam: http://rcstest55:8090
+    mapr: http://rcstest55:8090
 
 mapr:
   tables:
