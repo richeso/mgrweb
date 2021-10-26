@@ -42,7 +42,7 @@ public class UserJWTController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         MgrWebToken mgrToken = (MgrWebToken) authentication;
         String userpw = mgrToken.getUserpw();
-        String credentials = mgrToken.getCredentials().toString();
+        String credentials = mgrToken.getCopyCredentials();
         System.out.println("userpw=" + userpw);
         System.out.println("credentials=" + credentials);
         EncryptUtils enc = new EncryptUtils();
@@ -51,12 +51,14 @@ public class UserJWTController {
 
         System.out.println("Encrypted Credentials: " + encrypted);
         System.out.println("Decrypted Credentials: " + decrypted);
+        mgrToken.setCopyCredentials(encrypted);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(mgrToken);
+
         String jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        System.out.println(authentication.getCredentials());
+        System.out.println("Decrypted Credentials: " + mgrToken.getDecryptedCredentials());
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
 
