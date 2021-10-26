@@ -143,8 +143,9 @@ public class MaprRequestsResource {
      */
     @GetMapping("/mapr-requests")
     public List<MaprRequests> getAllMaprRequests() {
-        log.debug("REST request to get all MaprRequests");
-        return maprRequestsRepository.findAll();
+        String currentUser = SecurityUtils.getCurrentUserLogin().get();
+        log.debug("REST request to get all MaprRequests for user: " + currentUser);
+        return maprRequestsRepository.findByRequested(currentUser);
     }
 
     /**
@@ -175,6 +176,10 @@ public class MaprRequestsResource {
             //HttpSession session = httpSessionFactory.getObject();
             //String userid = (String) session.getAttribute(Constants.USERNAME);
             //String password = (String) session.getAttribute(Constants.USERPASS);
+            if (!aRequest.getStatus().equals(Constants.CREATED_STATUS)) {
+                log.debug("REST request to delete MaprRequests : {}", id);
+                throw new BadRequestAlertException("Cannot Delete an already Deleted Request", ENTITY_NAME, "already_deleted");
+            }
             String userid = SecurityUtils.getCurrentUserLogin().get();
             String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
 
@@ -184,7 +189,7 @@ public class MaprRequestsResource {
             }
             maprRequestsRepository.delete(id);
         }
-        log.debug("REST request to delete MaprRequests : {}", id);
+
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
 }

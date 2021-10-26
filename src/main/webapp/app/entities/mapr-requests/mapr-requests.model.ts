@@ -29,3 +29,14 @@ export class MaprRequests implements IMaprRequests {
 export function getMaprRequestsIdentifier(maprRequests: IMaprRequests): string | undefined {
   return maprRequests.id;
 }
+export function okToDelete(maprRequests: IMaprRequests): boolean {
+  if (maprRequests === 'undefined') {
+    if (maprRequests.status === 'CREATED') {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
