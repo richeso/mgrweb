@@ -3,6 +3,7 @@ package com.mapr.mgrweb.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.domain.Authority;
 import com.mapr.mgrweb.domain.User;
+import com.mapr.mgrweb.security.EncryptUtils;
 import com.mapr.mgrweb.security.MgrWebToken;
 import com.mapr.mgrweb.service.PamService;
 import com.mapr.mgrweb.service.UserService;
@@ -83,9 +84,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 //session.setAttribute(Constants.USERNAME, username);
                 List<GrantedAuthority> grantedAuths = new ArrayList<>();
                 for (Authority authority : user.getAuthorities()) grantedAuths.add(new SimpleGrantedAuthority(authority.getName()));
-
+                // Generate Custom Token to save credentials to use later in API calls
+                // to MapR Cluster - Credentials are encrypted with a random secret stored in userpw.
                 MgrWebToken token = new MgrWebToken(user.getLogin(), authentication.getCredentials(), grantedAuths);
-                token.setUserpw(user.getPassword().substring(0, 16));
+                token.setUserpw(EncryptUtils.generateSecret());
                 token.setDetails(authentication.getDetails());
 
                 //List<GrantedAuthority> grantedAuths = new ArrayList<>();

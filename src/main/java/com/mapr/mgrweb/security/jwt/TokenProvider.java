@@ -1,5 +1,6 @@
 package com.mapr.mgrweb.security.jwt;
 
+import com.mapr.mgrweb.security.EncryptUtils;
 import com.mapr.mgrweb.security.MgrWebToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -39,6 +40,7 @@ public class TokenProvider {
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         byte[] keyBytes;
         String secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getBase64Secret();
+
         if (!ObjectUtils.isEmpty(secret)) {
             log.debug("Using a Base64-encoded JWT secret key");
             keyBytes = Decoders.BASE64.decode(secret);
@@ -74,7 +76,7 @@ public class TokenProvider {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
 
-        return Jwts
+        String jwtToken = Jwts
             .builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
@@ -83,9 +85,12 @@ public class TokenProvider {
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
             .compact();
+        String encryptedToken = this.encryptToken(jwtToken);
+        return encryptedToken;
     }
 
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String inputToken) {
+        String token = decryptToken(inputToken);
         Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
         Collection<? extends GrantedAuthority> authorities = Arrays
@@ -108,8 +113,9 @@ public class TokenProvider {
         return mgrWebToken;
     }
 
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String inputToken) {
         try {
+            String authToken = decryptToken(inputToken);
             jwtParser.parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -117,5 +123,17 @@ public class TokenProvider {
             log.trace("Invalid JWT token trace.", e);
         }
         return false;
+    }
+
+    public String encryptToken(String authToken) {
+        EncryptUtils enc = new EncryptUtils();
+        String encrypted = enc.encrypt(authToken, new String(key.getEncoded()));
+        return encrypted;
+    }
+
+    public String decryptToken(String authToken) {
+        EncryptUtils enc = new EncryptUtils();
+        String decrypted = enc.decrypt(authToken, new String(key.getEncoded()));
+        return decrypted;
     }
 }

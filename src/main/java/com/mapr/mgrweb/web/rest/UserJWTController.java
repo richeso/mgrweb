@@ -3,6 +3,7 @@ package com.mapr.mgrweb.web.rest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mapr.mgrweb.security.EncryptUtils;
 import com.mapr.mgrweb.security.MgrWebToken;
+import com.mapr.mgrweb.security.SecurityUtils;
 import com.mapr.mgrweb.security.jwt.JWTFilter;
 import com.mapr.mgrweb.security.jwt.TokenProvider;
 import com.mapr.mgrweb.web.rest.vm.LoginVM;
@@ -43,23 +44,22 @@ public class UserJWTController {
         MgrWebToken mgrToken = (MgrWebToken) authentication;
         String userpw = mgrToken.getUserpw();
         String credentials = mgrToken.getCopyCredentials();
-        System.out.println("userpw=" + userpw);
-        System.out.println("credentials=" + credentials);
+        //System.out.println("userpw=" + userpw);
+        //System.out.println("credentials=" + credentials);
         EncryptUtils enc = new EncryptUtils();
         //String secret = EncryptUtils.generateSecret();
         String encrypted = enc.encrypt(credentials, userpw);
         String decrypted = enc.decrypt(encrypted, userpw);
 
-        System.out.println("Encrypted Credentials: " + encrypted);
-        System.out.println("Decrypted Credentials: " + decrypted);
+        //System.out.println("Encrypted Credentials: " + encrypted);
+        //System.out.println("Decrypted Credentials: " + decrypted);
         mgrToken.setCopyCredentials(encrypted);
-
-        SecurityContextHolder.getContext().setAuthentication(mgrToken);
+        SecurityUtils.setAuthentication(mgrToken);
 
         String jwt = tokenProvider.createToken(mgrToken, loginVM.isRememberMe());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        System.out.println("Decrypted Credentials: " + mgrToken.getDecryptedCredentials());
+        //System.out.println("Decrypted Credentials: " + mgrToken.getDecryptedCredentials());
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
 

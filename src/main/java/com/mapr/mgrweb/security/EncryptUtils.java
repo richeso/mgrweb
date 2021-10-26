@@ -59,8 +59,7 @@ public class EncryptUtils {
         return null;
     }
 
-    /*
-    public static String generateSecret()  {
+    public static String generateSecret() {
         Key key;
         SecureRandom rand = new SecureRandom();
         try {
@@ -72,18 +71,21 @@ public class EncryptUtils {
             throw new RuntimeException(e);
         }
     }
-
- */
+    /*
     public static void main(String[] args) {
-        final String secretKey = "secrete";
+        byte[] secret = generateSecret();
+        String secretKey = new String(secret);
         String originalString = "javaguides";
 
         EncryptUtils enutil = new EncryptUtils();
         String encryptedString = enutil.encrypt(originalString, secretKey);
         String decryptedString = enutil.decrypt(encryptedString, secretKey);
-
-        System.out.println(originalString);
-        System.out.println(encryptedString);
-        System.out.println(decryptedString);
+        System.out.println("secret="+secretKey+"  SecretLength="+secretKey.length());
+        System.out.println("original="+originalString);
+        System.out.println("encrypted="+encryptedString);
+        System.out.println("decrypted="+decryptedString);
     }
+
+ */
+
 }
