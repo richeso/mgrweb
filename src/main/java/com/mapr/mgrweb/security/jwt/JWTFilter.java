@@ -1,5 +1,6 @@
 package com.mapr.mgrweb.security.jwt;
 
+import com.mapr.mgrweb.security.SecurityUtils;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,7 +33,8 @@ public class JWTFilter extends GenericFilterBean {
         String jwt = resolveToken(httpServletRequest);
         if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityUtils.setAuthentication(authentication);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

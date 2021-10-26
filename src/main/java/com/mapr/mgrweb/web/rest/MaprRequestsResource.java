@@ -4,6 +4,7 @@ import com.mapr.mgrweb.config.Constants;
 import com.mapr.mgrweb.domain.MaprRequests;
 import com.mapr.mgrweb.domain.User;
 import com.mapr.mgrweb.repository.MaprRequestsRepository;
+import com.mapr.mgrweb.security.SecurityUtils;
 import com.mapr.mgrweb.service.MapRService;
 import com.mapr.mgrweb.service.UserService;
 import com.mapr.mgrweb.web.rest.errors.BadRequestAlertException;
@@ -69,8 +70,9 @@ public class MaprRequestsResource {
             maprRequests.initNewId();
             maprRequests.setAction("Create Volume");
 
-            HttpSession session = httpSessionFactory.getObject();
-            String username = (String) session.getAttribute(Constants.USERNAME);
+            //HttpSession session = httpSessionFactory.getObject();
+            String username = SecurityUtils.getCurrentUserLogin().get();
+
             String path = maprRequests.getPath();
             String volpath = "";
             if (path.startsWith("/")) volpath = "/user/" + username + path; else volpath = "/user/" + username + "/" + path;
@@ -87,8 +89,10 @@ public class MaprRequestsResource {
         }
 
         HttpSession session = httpSessionFactory.getObject();
-        String userid = (String) session.getAttribute(Constants.USERNAME);
-        String password = (String) session.getAttribute(Constants.USERPASS);
+        // String userid = (String) session.getAttribute(Constants.USERNAME);
+        // String password = (String) session.getAttribute(Constants.USERPASS);
+        String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
+        String userid = maprRequests.getRequestUser();
 
         String c8volResult = mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
         if (c8volResult.toUpperCase().indexOf("ERROR") >= 0) {
@@ -168,9 +172,11 @@ public class MaprRequestsResource {
         MaprRequests aRequest = maprRequests.get();
 
         if (aRequest != null) {
-            HttpSession session = httpSessionFactory.getObject();
-            String userid = (String) session.getAttribute(Constants.USERNAME);
-            String password = (String) session.getAttribute(Constants.USERPASS);
+            //HttpSession session = httpSessionFactory.getObject();
+            //String userid = (String) session.getAttribute(Constants.USERNAME);
+            //String password = (String) session.getAttribute(Constants.USERPASS);
+            String userid = SecurityUtils.getCurrentUserLogin().get();
+            String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
 
             String deleteResults = mapRService.deletevol(userid, password, aRequest.getName());
             if (deleteResults.toUpperCase().indexOf("ERROR") >= 0) {

@@ -1,5 +1,6 @@
 package com.mapr.mgrweb.security.jwt;
 
+import com.mapr.mgrweb.security.MgrWebToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,6 +25,8 @@ public class TokenProvider {
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String COPYCC_KEY = "copycc";
+    private static final String USERPW_KEY = "userpw";
 
     private final Key key;
 
@@ -56,7 +59,13 @@ public class TokenProvider {
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-
+        String copycc = "";
+        String userpw = "";
+        if (authentication instanceof MgrWebToken) {
+            MgrWebToken mgrToken = (MgrWebToken) authentication;
+            copycc = mgrToken.getCopyCredentials();
+            userpw = mgrToken.getUserpw();
+        }
         long now = (new Date()).getTime();
         Date validity;
         if (rememberMe) {
@@ -69,6 +78,8 @@ public class TokenProvider {
             .builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
+            .claim(COPYCC_KEY, copycc)
+            .claim(USERPW_KEY, userpw)
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
             .compact();
@@ -83,9 +94,18 @@ public class TokenProvider {
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        Object cc = claims.get(COPYCC_KEY);
+        Object pw = claims.get(USERPW_KEY);
+        String copycc = "";
+        String userpw = "";
+        if (cc != null) copycc = cc.toString();
+        if (pw != null) userpw = pw.toString();
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        User principal = new User(claims.getSubject(), "", authorities);
+        MgrWebToken mgrWebToken = new MgrWebToken(principal, token, authorities);
+        mgrWebToken.setUserpw(userpw);
+        mgrWebToken.setCopyCredentials(copycc);
+        return mgrWebToken;
     }
 
     public boolean validateToken(String authToken) {

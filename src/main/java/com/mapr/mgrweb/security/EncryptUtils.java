@@ -1,11 +1,14 @@
 package com.mapr.mgrweb.security;
 
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -56,6 +59,21 @@ public class EncryptUtils {
         return null;
     }
 
+    /*
+    public static String generateSecret()  {
+        Key key;
+        SecureRandom rand = new SecureRandom();
+        try {
+            KeyGenerator generator = KeyGenerator.getInstance("AES");
+            generator.init(256, rand);
+            key = generator.generateKey();
+            return new String(key.getEncoded());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+ */
     public static void main(String[] args) {
         final String secretKey = "secrete";
         String originalString = "javaguides";

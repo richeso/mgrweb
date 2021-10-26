@@ -138,5 +138,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "HPE MapR Management Request Utility - (C) Hewlett Packard Enterprise"
+  "footer": "(C)opyright Hewlett Packard Enterprise"
 }

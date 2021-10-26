@@ -1,5 +1,6 @@
 package com.mapr.mgrweb.security;
 
+import com.github.anicolasp.mapr.cli.client.MapRCLI;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,25 @@ public final class SecurityUtils {
 
     public static MgrWebToken getMgrWebToken() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        return (MgrWebToken) securityContext.getAuthentication();
+        Authentication auth = securityContext.getAuthentication();
+        return (MgrWebToken) auth;
+    }
+
+    public static void setAuthentication(Authentication inputAuth) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication auth = securityContext.getAuthentication();
+        if (auth instanceof MgrWebToken) {
+            // extract old info
+            MgrWebToken mgrWebToken = (MgrWebToken) auth;
+            String copyCredentials = mgrWebToken.getCopyCredentials();
+            String userpw = mgrWebToken.getUserpw();
+            MgrWebToken newToken = new MgrWebToken(inputAuth.getPrincipal(), copyCredentials, inputAuth.getAuthorities());
+            newToken.setAuthenticated(inputAuth.isAuthenticated());
+            newToken.setUserpw(userpw);
+            SecurityContextHolder.getContext().setAuthentication(newToken);
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(inputAuth);
+        }
     }
 
     private static String extractPrincipal(Authentication authentication) {

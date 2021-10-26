@@ -78,14 +78,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                         throw new BadCredentialsException("Unable to Create Your Registration Record : " + username);
                     }
                 }
-                HttpSession session = httpSessionFactory.getObject();
-                session.setAttribute(Constants.USERPASS, password);
-                session.setAttribute(Constants.USERNAME, username);
+                //HttpSession session = httpSessionFactory.getObject();
+                //session.setAttribute(Constants.USERPASS, password);
+                //session.setAttribute(Constants.USERNAME, username);
                 List<GrantedAuthority> grantedAuths = new ArrayList<>();
                 for (Authority authority : user.getAuthorities()) grantedAuths.add(new SimpleGrantedAuthority(authority.getName()));
 
                 MgrWebToken token = new MgrWebToken(user.getLogin(), authentication.getCredentials(), grantedAuths);
-                token.setUserpw(user.getPassword());
+                token.setUserpw(user.getPassword().substring(0, 16));
                 token.setDetails(authentication.getDetails());
 
                 //List<GrantedAuthority> grantedAuths = new ArrayList<>();
