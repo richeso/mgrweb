@@ -1,0 +1,31 @@
+<form *ngIf="maprRequests" name="downloadForm" (ngSubmit)="confirmDownload(maprRequests.id!)">
+  <div class="modal-header">
+    <h4 class="modal-title" data-cy="maprRequestsDeleteDialogHeading" jhiTranslate="entity.download.title">
+      Confirm download Fuse Client Package
+    </h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+  </div>
+
+  <div class="modal-body">
+    <jhi-alert-error></jhi-alert-error>
+
+    <p
+      id="jhi-delete-maprRequests-heading"
+      jhiTranslate="mgrwebApp.maprRequests.download.question"
+      [translateValues]="{ id: maprRequests.id }"
+    >
+      Downloading the Fuse Client Setup for the new Volume. Please confirm to Download.
+    </p>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button id="jhi-confirm-download-maprRequests" data-cy="entityConfirmDownloadButton" type="submit" class="btn btn-info">
+      <fa-icon icon="times"></fa-icon>&nbsp;<span jhiTranslate="entity.action.download">Download</span>
+    </button>
+  </div>
+</form>

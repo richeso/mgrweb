@@ -15,6 +15,7 @@ export type EntityArrayResponseType = HttpResponse<IMaprRequests[]>;
 @Injectable({ providedIn: 'root' })
 export class MaprRequestsService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/mapr-requests');
+  protected downloadUrl = this.applicationConfigService.getEndpointFor('api/getfile');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -54,6 +55,10 @@ export class MaprRequestsService {
 
   delete(id: string): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  download(id: string): Observable<HttpResponse<{}>> {
+    return this.http.get(`${this.downloadUrl}/${id}`, { responseType: 'blob', observe: 'response' });
   }
 
   addMaprRequestsToCollectionIfMissing(

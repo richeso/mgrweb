@@ -16,6 +16,10 @@ Navbar
   width: 1.75em;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+  color: #ffffff;
+}
+
 .navbar {
   padding: 0.2rem 1rem;
   .dropdown-item.active,

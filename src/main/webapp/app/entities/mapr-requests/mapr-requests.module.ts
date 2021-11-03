@@ -4,11 +4,18 @@ import { MaprRequestsComponent } from './list/mapr-requests.component';
 import { MaprRequestsDetailComponent } from './detail/mapr-requests-detail.component';
 import { MaprRequestsUpdateComponent } from './update/mapr-requests-update.component';
 import { MaprRequestsDeleteDialogComponent } from './delete/mapr-requests-delete-dialog.component';
+import { MaprRequestsDownloadDialogComponent } from './download/mapr-requests-download-dialog.component';
 import { MaprRequestsRoutingModule } from './route/mapr-requests-routing.module';
 
 @NgModule({
   imports: [SharedModule, MaprRequestsRoutingModule],
-  declarations: [MaprRequestsComponent, MaprRequestsDetailComponent, MaprRequestsUpdateComponent, MaprRequestsDeleteDialogComponent],
-  entryComponents: [MaprRequestsDeleteDialogComponent],
+  declarations: [
+    MaprRequestsComponent,
+    MaprRequestsDetailComponent,
+    MaprRequestsUpdateComponent,
+    MaprRequestsDeleteDialogComponent,
+    MaprRequestsDownloadDialogComponent,
+  ],
+  entryComponents: [MaprRequestsDeleteDialogComponent, MaprRequestsDownloadDialogComponent],
 })
 export class MaprRequestsModule {}

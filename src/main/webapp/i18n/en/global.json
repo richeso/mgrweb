@@ -95,6 +95,7 @@
       "back": "Back",
       "cancel": "Cancel",
       "delete": "Delete",
+      "download": "Download",
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
@@ -106,6 +107,9 @@
     },
     "delete": {
       "title": "Confirm delete operation"
+    },
+    "download": {
+      "title": "Confirm download Fuse Client Package"
     },
     "validation": {
       "required": "This field is required.",

@@ -54,6 +54,7 @@ public class DownloadService {
                 .queryParam("password", password);
             // make a request
             ResponseEntity<byte[]> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.GET, request, byte[].class);
+
             return response;
         } catch (Exception e) {
             String errormsg = "Error Encountered: " + e.getMessage();
