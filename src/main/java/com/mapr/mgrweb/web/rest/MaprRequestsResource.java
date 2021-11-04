@@ -202,7 +202,7 @@ public class MaprRequestsResource {
             maprRequestsRepository.delete(id);
         }
 
-        String message = "Successfully Created New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
+        String message = "Successfully Deleted New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, message, "")).build();
     }
 
