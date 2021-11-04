@@ -153,6 +153,7 @@
               <span jhiTranslate="global.menu.account.settings">Settings</span>
             </a>
           </li>
+          <!--
           <li *ngSwitchCase="true">
             <a
               class="dropdown-item"
@@ -165,6 +166,7 @@
               <span jhiTranslate="global.menu.account.password">Password</span>
             </a>
           </li>
+          -->
           <li *ngSwitchCase="true">
             <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
               <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
@@ -177,12 +179,14 @@
               <span jhiTranslate="global.menu.account.login">Sign in</span>
             </a>
           </li>
+          <!--
           <li *ngSwitchCase="false">
             <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()" data-cy="register">
               <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
               <span jhiTranslate="global.menu.account.register">Register</span>
             </a>
           </li>
+          -->
         </ul>
       </li>
     </ul>
