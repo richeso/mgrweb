@@ -11,6 +11,7 @@ import org.ojai.store.Connection;
 import org.ojai.store.DocumentStore;
 import org.ojai.store.Query;
 import org.ojai.store.QueryCondition;
+import org.ojai.types.OTimestamp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,6 +64,25 @@ public class MaprRequestsRepository extends MapRDBRepository<MaprRequests> {
             .newCondition()
             .is("requestUser", QueryCondition.Op.EQUAL, requestedBy)
             .build();
+        Query query = connection.newQuery().where(condition).build();
+
+        return StreamSupport
+            .stream(store.find(query).spliterator(), false)
+            .map(doc -> Mapper.read(doc.asJsonString(), MaprRequests.class))
+            .collect(Collectors.toList());
+    }
+
+    public List<MaprRequests> findActiveByName(String name) {
+        DocumentStore store = mapRDBSession.getStore(maprRequestsTable);
+        Connection connection = mapRDBSession.getConnection();
+        QueryCondition condition = connection
+            .newCondition()
+            .and()
+            .condition(connection.newCondition().is("name", QueryCondition.Op.EQUAL, name).build())
+            .condition(connection.newCondition().is("status", QueryCondition.Op.EQUAL, Constants.CREATED_STATUS).build())
+            .close()
+            .build();
+
         Query query = connection.newQuery().where(condition).build();
 
         return StreamSupport

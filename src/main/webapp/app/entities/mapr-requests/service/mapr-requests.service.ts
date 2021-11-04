@@ -15,7 +15,7 @@ export type EntityArrayResponseType = HttpResponse<IMaprRequests[]>;
 @Injectable({ providedIn: 'root' })
 export class MaprRequestsService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/mapr-requests');
-  protected downloadUrl = this.applicationConfigService.getEndpointFor('api/getfile');
+  protected downloadUrl = this.applicationConfigService.getEndpointFor('api/getzip');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 

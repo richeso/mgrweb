@@ -1,5 +1,6 @@
 package com.mapr.mgrweb.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.config.Constants;
 import com.mapr.mgrweb.domain.MaprRequests;
 import com.mapr.mgrweb.domain.User;
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -67,6 +69,14 @@ public class MaprRequestsResource {
         if (maprRequests.getId() != null) {
             throw new BadRequestAlertException("A new maprRequests cannot already have an ID", ENTITY_NAME, "idexists");
         } else {
+            // check whether volume name already exists
+            if (volumeExists(maprRequests.getName())) {
+                throw new BadRequestAlertException(
+                    "Volume: " + maprRequests.getName() + " Already exists, Please Use another Volume Name.",
+                    "",
+                    ""
+                );
+            }
             maprRequests.initNewId();
             maprRequests.setAction("Create Volume");
 
@@ -95,16 +105,17 @@ public class MaprRequestsResource {
         String userid = maprRequests.getRequestUser();
 
         String c8volResult = mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
+        String message = getApiMessage(c8volResult);
         if (c8volResult.toUpperCase().indexOf("ERROR") >= 0) {
-            throw new BadRequestAlertException(c8volResult, ENTITY_NAME, maprRequests.getName());
+            throw new BadRequestAlertException(message, "", "");
         }
         maprRequestsRepository.save(maprRequests);
         Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
         MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();
-
+        message = " Volume Name: " + maprRequests.getName() + " in Path: " + maprRequests.getPath();
         return ResponseEntity
             .created(new URI("/api/mapr-requests/" + maprRequests.get_id()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.get_id().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, message))
             .body(result);
     }
 
@@ -184,12 +195,61 @@ public class MaprRequestsResource {
             String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
 
             String deleteResults = mapRService.deletevol(userid, password, aRequest.getName());
+            String message = getApiMessage(deleteResults);
             if (deleteResults.toUpperCase().indexOf("ERROR") >= 0) {
-                throw new BadRequestAlertException(deleteResults, ENTITY_NAME, aRequest.getName());
+                throw new BadRequestAlertException(message, "", "");
             }
             maprRequestsRepository.delete(id);
         }
 
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+        String message = "Successfully Created New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
+        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, message, "")).build();
+    }
+
+    private boolean volumeExists(String name) {
+        boolean exists = false;
+        List<MaprRequests> namedList = maprRequestsRepository.findActiveByName(name);
+        if (namedList != null && !namedList.isEmpty()) exists = true;
+        return exists;
+    }
+
+    private String getApiMessage(String result) throws Exception {
+        // This extracts messages/errors returning from MapR api
+        // payload
+        String searchFor = "messages";
+        if (result.toUpperCase().indexOf("ERROR") >= 0) {
+            return getApiErrors(result);
+        }
+        String errorDesc = result;
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> apiMessages = objectMapper.readValue(result, Map.class);
+        List<String> messages = (List<String>) apiMessages.get(searchFor);
+        if (messages != null && !messages.isEmpty()) {
+            boolean first = true;
+            for (String item : messages) {
+                if (first) errorDesc = item; else {
+                    first = false;
+                    errorDesc += "\n" + item;
+                }
+            }
+        }
+
+        return errorDesc;
+    }
+
+    private String getApiErrors(String result) throws Exception {
+        // This extracts messages/errors returning from MapR api
+        // payload
+        String searchFor = "errors";
+        String errorDesc = result;
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> apiMessages = objectMapper.readValue(result, Map.class);
+        List<Object> errors = (List<Object>) apiMessages.get(searchFor);
+        for (Object item : errors) {
+            Map<String, Object> errorMap = (Map<String, Object>) item;
+            errorDesc = (String) errorMap.get("desc");
+            break;
+        }
+        return errorDesc;
     }
 }

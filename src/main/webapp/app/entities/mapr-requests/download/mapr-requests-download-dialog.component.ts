@@ -34,7 +34,7 @@ export class MaprRequestsDownloadDialogComponent {
       const url = window.URL.createObjectURL(blob);
       //window.open(url);
       //window.location.href = response.url;
-      fileSaver.saveAs(blob, 'tempfile.csv');
+      fileSaver.saveAs(blob, 'tempfile.zip');
       this.activeModal.dismiss();
       //}), error => console.log('Error downloading the file'),
     }),

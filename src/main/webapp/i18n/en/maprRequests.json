@@ -8,15 +8,15 @@
         "createOrEditLabel": "Create Volume Request",
         "notFound": "No Volume Requests found"
       },
-      "created": "A new Volume has been Created with identifier {{ param }}",
+      "created": "Volume Successfully Created:  {{ param }}",
       "updated": "A Volume Request is updated with identifier {{ param }}",
-      "deleted": "A Volume has been deleted with identifier {{ param }}",
+      "deleted": "Volume Successfully Deleted: {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete This Volume {{ id }}?"
+        "question": "Are you sure you want to Delete the Volume Named: &nbsp {{ param1 }} in path: {{param2}}?"
       },
       "downloaded": "Fuse Client Setup has been downloaded for the Volume {{ param }}",
       "download": {
-        "question": "Downloading the Fuse Client Setup for the new Volume. Please confirm to Download {{ id }}"
+        "question": "Downloading the Fuse Client Setup for the new Volume. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download Client for Volume Name: {{ param }}"
       },
       "detail": {
         "title": "Volume Requests"
