@@ -58,6 +58,19 @@
           <li>
             <a
               class="dropdown-item"
+              routerLink="/mapr-requests/new"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span jhiTranslate="mgrwebApp.maprRequests.home.createLabel">Create a new Volume Request</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              class="dropdown-item"
               routerLink="/mapr-requests/info"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
@@ -67,6 +80,7 @@
               <span jhiTranslate="global.menu.entities.mapVolumes">Map Volumes To Disk</span>
             </a>
           </li>
+
           <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
         </ul>
       </li>
