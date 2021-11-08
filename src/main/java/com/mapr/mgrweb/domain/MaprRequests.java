@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mapr.mgrweb.repository.MapRDBEntity;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -42,6 +44,8 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
     private String status;
 
     private Instant statusDate;
+
+    private Map<String, String> extraProperties;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -171,6 +175,17 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
         return this;
     }
 
+    public Map<String, String> getExtraProperties() {
+        if (extraProperties == null) {
+            this.extraProperties = new HashMap<String, String>();
+        }
+        return this.extraProperties;
+    }
+
+    public void setExtraProperties(Map extra) {
+        this.extraProperties = extra;
+    }
+
     public void setStatusDate(Instant statusDate) {
         this.statusDate = statusDate;
     }
@@ -194,6 +209,22 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
         return getClass().hashCode();
     }
 
+    public String getExtraPropertiez() {
+        StringBuffer extra = new StringBuffer("[{");
+        Map<String, String> props = getExtraProperties();
+        int i = 0;
+        // looping over keys
+        for (String key : props.keySet()) {
+            // search  for value
+            String value = props.get(key);
+            if (i > 0) extra.append(",");
+            extra.append(key + "='" + value + "'");
+            ++i;
+        }
+        extra.append("}]");
+        return extra.toString();
+    }
+
     // prettier-ignore
     @Override
     public String toString() {
@@ -207,6 +238,7 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
             ", requestDate='" + getRequestDate() + "'" +
             ", status='" + getStatus() + "'" +
             ", statusDate='" + getStatusDate() + "'" +
+            ", extraProperties="+getExtraPropertiez() +
             "}";
     }
 }

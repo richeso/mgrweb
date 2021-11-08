@@ -2,7 +2,7 @@
   "mgrwebApp": {
     "maprRequests": {
       "home": {
-        "title": "Volume Requests",
+        "title": "Volume Audit",
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Volume Request",
         "createOrEditLabel": "Create Volume Request",
@@ -19,7 +19,7 @@
         "question": "Downloading the Fuse Client Setup for the new Volume. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download Client for Volume Name: {{ param }}"
       },
       "detail": {
-        "title": "Volume Requests"
+        "title": "Volume Audit"
       },
       "id": "ID",
       "type": "Type",

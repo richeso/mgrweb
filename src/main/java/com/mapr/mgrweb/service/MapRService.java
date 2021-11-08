@@ -23,6 +23,10 @@ public class MapRService {
     private final String URI_VOLUME_INFO = "/api/volinfo";
     private final String URI_VOLUME_CREATE = "/api/c8vol";
     private final String URI_VOLUME_REMOVE = "/api/deletevol";
+    private final String URI_ALL = "/api/mapr";
+    private final String URI_VOLUME_LIST = "/volume/list";
+    private final String VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
+    private String FILTER_COLUMN = "[aename==@userid]";
     private static final Logger log = LoggerFactory.getLogger(MapRService.class);
 
     @Autowired
@@ -94,6 +98,32 @@ public class MapRService {
                 .queryParam("userid", username)
                 .queryParam("password", password)
                 .queryParam("volume", volume);
+            // make a request
+            ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String responseString = objectMapper.writeValueAsString(response.getBody());
+            return responseString;
+        } catch (Exception e) {
+            //e.printStackTrace();
+            String errormsg = "Error Encountered: " + e.getMessage();
+            log.debug(errormsg);
+            return errormsg;
+        }
+    }
+
+    public String volumeList(String userid, String password, String aename) throws Exception {
+        try {
+            HttpHeaders headers = createAuthHeader(userid, password);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity request = new HttpEntity(headers);
+            String aefilter = FILTER_COLUMN.replaceAll("@userid", userid);
+            UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(maprHost + URI_ALL)
+                .queryParam("userid", userid)
+                .queryParam("password", password)
+                .queryParam("uri", URI_VOLUME_LIST)
+                .queryParam("filter", aefilter)
+                .queryParam("columns", VOLUME_LIST_COLUMNS);
             // make a request
             ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
             ObjectMapper objectMapper = new ObjectMapper();

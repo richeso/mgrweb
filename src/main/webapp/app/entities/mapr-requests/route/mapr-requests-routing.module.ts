@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { MaprRequestsComponent } from '../list/mapr-requests.component';
 import { MaprRequestsDetailComponent } from '../detail/mapr-requests-detail.component';
+import { MaprRequestsInfoComponent } from '../info/mapr-requests-info.component';
 import { MaprRequestsUpdateComponent } from '../update/mapr-requests-update.component';
 import { MaprRequestsRoutingResolveService } from './mapr-requests-routing-resolve.service';
 
@@ -24,6 +25,14 @@ const maprRequestsRoute: Routes = [
   {
     path: 'new',
     component: MaprRequestsUpdateComponent,
+    resolve: {
+      maprRequests: MaprRequestsRoutingResolveService,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'info',
+    component: MaprRequestsInfoComponent,
     resolve: {
       maprRequests: MaprRequestsRoutingResolveService,
     },

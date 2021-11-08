@@ -10,6 +10,7 @@ export interface IMaprRequests {
   requestDate?: dayjs.Dayjs | null;
   status?: string | null;
   statusDate?: dayjs.Dayjs | null;
+  extraProperties?: Map<string, string> | null;
 }
 
 export class MaprRequests implements IMaprRequests {
@@ -22,7 +23,8 @@ export class MaprRequests implements IMaprRequests {
     public requestUser?: string | null,
     public requestDate?: dayjs.Dayjs | null,
     public status?: string | null,
-    public statusDate?: dayjs.Dayjs | null
+    public statusDate?: dayjs.Dayjs | null,
+    public extraProperties?: Map<string, string> | null
   ) {}
 }
 
