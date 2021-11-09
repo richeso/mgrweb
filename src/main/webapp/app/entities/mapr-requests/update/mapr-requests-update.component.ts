@@ -29,6 +29,10 @@ export class MaprRequestsUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required, Validators.minLength(3)]],
     path: [null, [Validators.required, Validators.minLength(3)]],
+    extraProperties: this.fb.group({
+      advisoryquota: ['0', Validators.required],
+      quota: ['0', Validators.required],
+    }),
   });
 
   constructor(
@@ -91,6 +95,7 @@ export class MaprRequestsUpdateComponent implements OnInit {
     this.editForm.patchValue({
       name: maprRequests.name,
       path: maprRequests.path,
+      extraProperties: maprRequests.extraProperties,
     });
   }
 
@@ -99,6 +104,7 @@ export class MaprRequestsUpdateComponent implements OnInit {
       ...new MaprRequests(),
       name: this.editForm.get(['name'])!.value,
       path: this.editForm.get(['path'])!.value,
+      extraProperties: this.editForm.get(['extraProperties'])!.value,
     };
   }
 }

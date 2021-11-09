@@ -209,8 +209,8 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
         return getClass().hashCode();
     }
 
-    public String getExtraPropertiez() {
-        StringBuffer extra = new StringBuffer("[{");
+    private String getExtraPropertiez() {
+        StringBuffer extra = new StringBuffer("{");
         Map<String, String> props = getExtraProperties();
         int i = 0;
         // looping over keys
@@ -221,7 +221,7 @@ public class MaprRequests extends AbstractAuditingEntity implements Serializable
             extra.append(key + "='" + value + "'");
             ++i;
         }
-        extra.append("}]");
+        extra.append("}");
         return extra.toString();
     }
 
