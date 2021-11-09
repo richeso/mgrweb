@@ -1,104 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-
-import * as dayjs from 'dayjs';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
-
-import { IMaprRequests, MaprRequests } from '../mapr-requests.model';
+import { Component } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { IMaprRequests } from '../mapr-requests.model';
 import { MaprRequestsService } from '../service/mapr-requests.service';
-import { Account } from 'app/core/auth/account.model';
-import { AccountService } from 'app/core/auth/account.service';
-import { LoginService } from 'app/login/login.service';
-import { ProfileService } from 'app/layouts/profiles/profile.service';
-import { AlertService, Alert } from 'app/core/util/alert.service';
+import * as fileSaver from 'file-saver';
 
 @Component({
-  selector: 'jhi-mapr-requests-info',
   templateUrl: './mapr-requests-info.component.html',
 })
-export class MaprRequestsInfoComponent implements OnInit {
-  isSaving = false;
-  account: Account | null = null;
-  alerts: Alert[] = [];
+export class MaprRequestsInfoComponent {
+  maprRequests?: IMaprRequests;
 
-  editForm = this.fb.group({
-    id: [],
-    name: [null, [Validators.required, Validators.minLength(3)]],
-    path: [null, [Validators.required, Validators.minLength(3)]],
-  });
-
-  constructor(
-    protected maprRequestsService: MaprRequestsService,
-    protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder,
-    protected accountService: AccountService,
-    protected alertService: AlertService
-  ) {}
-
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ maprRequests }) => {
-      if (maprRequests.id === undefined) {
-        const today = dayjs().startOf('day');
-        //       maprRequests.requestDate = today;
-        //       maprRequests.statusDate = today;
-        //       maprRequests.action = "create volume";
-        //        maprRequests.type = "volume create";
-      }
-
-      this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
-      this.updateForm(maprRequests);
-    });
-  }
+  constructor(protected maprRequestsService: MaprRequestsService) {}
 
   previousState(): void {
     window.history.back();
   }
 
-  save(): void {
-    this.isSaving = true;
-    const maprRequests = this.createFromForm();
-    if (maprRequests.id !== undefined) {
-      this.subscribeToSaveResponse(this.maprRequestsService.update(maprRequests));
-    } else {
-      this.subscribeToSaveResponse(this.maprRequestsService.create(maprRequests));
-    }
-  }
+  download(id: string): void {
+    //  this.maprRequestsService.download(id).subscribe(() => {
+    //   this.activeModal.close('downloaded');
+    // });
+    // this.maprRequestsService.download(id).subscribe(response => {
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMaprRequests>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
-      () => this.onSaveSuccess(),
-      () => this.onSaveError()
-    );
-  }
+    //  const url: string | null = response.url;
+    //  if (url) {
+    //    window.open(url);
+    //  }
+    //  this.activeModal.dismiss();
 
-  protected onSaveSuccess(): void {
-    this.previousState();
-  }
-
-  protected onSaveError(): void {
-    // Api for inheritance.
-  }
-
-  protected onSaveFinalize(): void {
-    this.isSaving = false;
-  }
-
-  protected updateForm(maprRequests: IMaprRequests): void {
-    this.editForm.patchValue({
-      name: maprRequests.name,
-      path: maprRequests.path,
-    });
-  }
-
-  protected createFromForm(): IMaprRequests {
-    return {
-      ...new MaprRequests(),
-      name: this.editForm.get(['name'])!.value,
-      path: this.editForm.get(['path'])!.value,
-    };
+    this.maprRequestsService.download(id).subscribe((response: any) => {
+      //when you use stricter type checking
+      const blob: any = new Blob([response.body], { type: 'application/octet-stream' });
+      const url = window.URL.createObjectURL(blob);
+      //window.open(url);
+      //window.location.href = response.url;
+      fileSaver.saveAs(blob, 'tempfile.zip');
+      //}), error => console.log('Error downloading the file'),
+    }),
+      (error: any) => {
+        window.console.log('Error downloading the file');
+      }, //when you use stricter type checking
+      () => {
+        window.console.info('File downloaded successfully');
+      };
   }
 }

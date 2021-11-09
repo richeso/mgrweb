@@ -16,7 +16,7 @@
       },
       "downloaded": "Fuse Client Setup has been downloaded for the Volume {{ param }}",
       "download": {
-        "question": "Downloading the Fuse Client Setup for the new Volume. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download Client for Volume Name: {{ param }}"
+        "question": "Downloading the Fuse Client Setup for new Volumes. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download the Client and Instructions}"
       },
       "detail": {
         "title": "Volume Audit"
