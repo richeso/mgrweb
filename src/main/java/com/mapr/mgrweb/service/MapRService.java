@@ -1,9 +1,8 @@
 package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Map;
+import com.mapr.mgrweb.domain.MaprRequests;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,7 @@ public class MapRService {
         }
     }
 
-    public String volumeList(String userid, String password, String aename) throws Exception {
+    public List<MaprRequests> volumeList(String userid, String password, String aename) throws Exception {
         try {
             HttpHeaders headers = createAuthHeader(userid, password);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -137,16 +136,37 @@ public class MapRService {
                 .queryParam("uri", URI_VOLUME_LIST)
                 .queryParam("filter", aefilter)
                 .queryParam("columns", VOLUME_LIST_COLUMNS);
-            // make a request
+            // Make the request to list all volumes belonging to ae
             ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseString = objectMapper.writeValueAsString(response.getBody());
-            return responseString;
+            // ObjectMapper objectMapper = new ObjectMapper();
+            // String responseString = objectMapper.writeValueAsString(response.getBody());
+            Map<String, Object> listmap = null;
+            ArrayList<Map<String, Object>> volumemap = null;
+            try {
+                listmap = (Map<String, Object>) response.getBody();
+                volumemap = (ArrayList<Map<String, Object>>) listmap.get("data");
+            } catch (Exception e) {
+                // swallow exception...assuming nothing was returned from the rest call
+            }
+
+            List<MaprRequests> results = new ArrayList<MaprRequests>();
+            Iterator i = volumemap.iterator();
+            while (i.hasNext()) {
+                Map<String, Object> aVolume = (Map<String, Object>) i.next();
+                MaprRequests aRequest = new MaprRequests();
+                //VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
+                aRequest.setName((String) aVolume.get("volumename"));
+                aRequest.setPath((String) aVolume.get("mountdir"));
+                aRequest.getExtraProperties().put("advisoryquota", (String) aVolume.get("advisoryquota"));
+                aRequest.getExtraProperties().put("quota", (String) aVolume.get("quota"));
+                results.add(aRequest);
+            }
+            return results;
         } catch (Exception e) {
             //e.printStackTrace();
             String errormsg = "Error Encountered: " + e.getMessage();
             log.debug(errormsg);
-            return errormsg;
+            throw e;
         }
     }
 

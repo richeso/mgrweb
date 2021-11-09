@@ -11,10 +11,7 @@ import com.mapr.mgrweb.service.UserService;
 import com.mapr.mgrweb.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -203,6 +200,21 @@ public class MaprRequestsResource {
 
         String message = "Successfully Deleted New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, message, "")).build();
+    }
+
+    /**
+     * {@code GET  /mapr-requests} : get all the maprRequests.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of maprRequests in body.
+     */
+    @GetMapping("/mapr-listvolumes")
+    public List<MaprRequests> getMaprVolumeList() throws Exception {
+        String userid = SecurityUtils.getCurrentUserLogin().get();
+        String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
+
+        List<MaprRequests> results = mapRService.volumeList(userid, password, userid);
+        log.debug("REST request to get VolumeList for ae user: " + userid);
+        return results;
     }
 
     private boolean volumeExists(String name) {
