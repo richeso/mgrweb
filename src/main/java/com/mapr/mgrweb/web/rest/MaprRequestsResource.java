@@ -66,32 +66,30 @@ public class MaprRequestsResource {
     @PostMapping("/mapr-requests")
     public ResponseEntity<MaprRequests> createMaprRequests(@Valid @RequestBody MaprRequests maprRequests) throws Exception {
         log.debug("REST request to save MaprRequests : {}", maprRequests);
+        //HttpSession session = httpSessionFactory.getObject();
+        String userid = SecurityUtils.getCurrentUserLogin().get();
+        // prefix volume name entered with userid + "."
+        String volumeName = userid + "." + maprRequests.getName();
+
         if (maprRequests.getId() != null) {
             throw new BadRequestAlertException("A new maprRequests cannot already have an ID", ENTITY_NAME, "idexists");
         } else {
             // check whether volume name already exists
-            if (volumeExists(maprRequests.getName())) {
-                throw new BadRequestAlertException(
-                    "Volume: " + maprRequests.getName() + " Already exists, Please Use another Volume Name.",
-                    "",
-                    ""
-                );
+            if (volumeExists(volumeName)) {
+                throw new BadRequestAlertException("Volume: " + volumeName + " Already exists, Please Use another Volume Name.", "", "");
             }
             maprRequests.initNewId();
             maprRequests.setAction("Create Volume");
 
-            //HttpSession session = httpSessionFactory.getObject();
-            String username = SecurityUtils.getCurrentUserLogin().get();
-
             String path = maprRequests.getPath();
             String volpath = "";
-            if (path.startsWith("/")) volpath = "/user/" + username + path; else volpath = "/user/" + username + "/" + path;
+            if (path.startsWith("/")) volpath = "/user/" + userid + path; else volpath = "/user/" + userid + "/" + path;
             maprRequests.setPath(volpath);
-            maprRequests.setCreatedBy(username);
-            maprRequests.setRequestUser(username);
+            maprRequests.setCreatedBy(userid);
+            maprRequests.setRequestUser(userid);
             maprRequests.setRequestDate(new Date(System.currentTimeMillis()).toInstant());
             maprRequests.setCreatedDate(new Date(System.currentTimeMillis()).toInstant());
-            maprRequests.setLastModifiedBy(username);
+            maprRequests.setLastModifiedBy(userid);
             maprRequests.setStatus(Constants.CREATED_STATUS);
             maprRequests.setLastModifiedDate(new Date(System.currentTimeMillis()).toInstant());
             maprRequests.setType("Volume Create");
@@ -102,13 +100,14 @@ public class MaprRequestsResource {
         // String userid = (String) session.getAttribute(Constants.USERNAME);
         // String password = (String) session.getAttribute(Constants.USERPASS);
         String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
-        String userid = maprRequests.getRequestUser();
 
-        String c8volResult = mapRService.c8vol(userid, password, maprRequests.getName(), maprRequests.getPath());
+        String c8volResult = mapRService.c8vol(userid, password, volumeName, maprRequests.getPath(), maprRequests.getExtraProperties());
         String message = getApiMessage(c8volResult);
         if (c8volResult.toUpperCase().indexOf("ERROR") >= 0) {
             throw new BadRequestAlertException(message, "", "");
         }
+
+        maprRequests.setName(volumeName);
         maprRequestsRepository.save(maprRequests);
         Optional<MaprRequests> foundResult = maprRequestsRepository.findById(maprRequests.get_id());
         MaprRequests result = foundResult.isPresent() ? foundResult.get() : new MaprRequests();

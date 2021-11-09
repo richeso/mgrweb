@@ -38,7 +38,8 @@ public class MapRService {
     @Value("${api.host.mapr}")
     private String maprHost;
 
-    public String c8vol(String username, String password, String volume, String volumePath) throws Exception {
+    public String c8vol(String username, String password, String volume, String volumePath, Map<String, String> extraProperties)
+        throws Exception {
         try {
             HttpHeaders headers = createAuthHeader(username, password);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -49,6 +50,18 @@ public class MapRService {
                 .queryParam("password", password)
                 .queryParam("volume", volume)
                 .queryParam("path", volumePath);
+
+            // add extra parameters
+            // looping over keys
+            for (String key : extraProperties.keySet()) {
+                // search  for value
+                String value = extraProperties.get(key);
+                // default quota/advisoryquota to M - MegaBytes
+                if (value != null && Integer.parseInt(value) > 0 && key.indexOf("quota") >= 0) builder.queryParam(
+                    key,
+                    value + "M"
+                ); else builder.queryParam(key, value);
+            }
 
             // make a request
             ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);

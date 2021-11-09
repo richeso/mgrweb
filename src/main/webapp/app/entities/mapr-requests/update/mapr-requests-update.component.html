@@ -14,6 +14,9 @@
 
         <div class="form-group">
           <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.name" for="field_name">Name</label>
+          <span *ngIf="account">
+            <B>({{ account.login }}.*)</B></span
+          >
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
@@ -53,7 +56,7 @@
 
         <div class="form-group" formGroupName="extraProperties">
           <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.advisoryquota" for="field_advisoryquota"
-            >Advisory Quota</label
+            >Advisory Quota (MB)</label
           >
           <input
             type="text"
@@ -63,7 +66,7 @@
             data-cy="path"
             formControlName="advisoryquota"
           />
-          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.quota" for="field_quota">Quota</label>
+          <label class="form-control-label" jhiTranslate="mgrwebApp.maprRequests.quota" for="field_quota">Quota (MB)</label>
           <input type="text" class="form-control" name="quota" id="field_quota" data-cy="path" formControlName="quota" />
           <div
             *ngIf="
