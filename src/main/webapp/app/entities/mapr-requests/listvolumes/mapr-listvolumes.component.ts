@@ -7,10 +7,10 @@ import { MaprRequestsService } from '../service/mapr-requests.service';
 import { MaprRequestsDeleteDialogComponent } from '../delete/mapr-requests-delete-dialog.component';
 import { MaprRequestsDownloadDialogComponent } from '../download/mapr-requests-download-dialog.component';
 @Component({
-  selector: 'jhi-mapr-requests',
-  templateUrl: './mapr-requests.component.html',
+  selector: 'jhi-mapr-listvolumes',
+  templateUrl: './mapr-listvolumes.component.html',
 })
-export class MaprRequestsComponent implements OnInit {
+export class MaprListVolumesComponent implements OnInit {
   maprRequests?: IMaprRequests[];
   isLoading = false;
 
@@ -19,7 +19,7 @@ export class MaprRequestsComponent implements OnInit {
   loadAll(): void {
     this.isLoading = true;
 
-    this.maprRequestsService.query().subscribe(
+    this.maprRequestsService.listvolumes().subscribe(
       (res: HttpResponse<IMaprRequests[]>) => {
         this.isLoading = false;
         this.maprRequests = res.body ?? [];

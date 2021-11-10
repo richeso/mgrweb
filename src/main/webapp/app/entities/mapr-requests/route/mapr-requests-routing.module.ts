@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { MaprRequestsComponent } from '../list/mapr-requests.component';
+import { MaprListVolumesComponent } from '../listvolumes/mapr-listvolumes.component';
 import { MaprRequestsDetailComponent } from '../detail/mapr-requests-detail.component';
 import { MaprRequestsInfoComponent } from '../info/mapr-requests-info.component';
 import { MaprRequestsUpdateComponent } from '../update/mapr-requests-update.component';
@@ -33,6 +34,14 @@ const maprRequestsRoute: Routes = [
   {
     path: 'info',
     component: MaprRequestsInfoComponent,
+    resolve: {
+      maprRequests: MaprRequestsRoutingResolveService,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'volumes',
+    component: MaprListVolumesComponent,
     resolve: {
       maprRequests: MaprRequestsRoutingResolveService,
     },

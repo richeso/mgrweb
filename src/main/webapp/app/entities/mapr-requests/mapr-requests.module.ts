@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'app/shared/shared.module';
 import { MaprRequestsComponent } from './list/mapr-requests.component';
+import { MaprListVolumesComponent } from './listvolumes/mapr-listvolumes.component';
 import { MaprRequestsDetailComponent } from './detail/mapr-requests-detail.component';
 import { MaprRequestsUpdateComponent } from './update/mapr-requests-update.component';
 import { MaprRequestsInfoComponent } from './info/mapr-requests-info.component';
@@ -12,6 +13,7 @@ import { MaprRequestsRoutingModule } from './route/mapr-requests-routing.module'
   imports: [SharedModule, MaprRequestsRoutingModule],
   declarations: [
     MaprRequestsComponent,
+    MaprListVolumesComponent,
     MaprRequestsDetailComponent,
     MaprRequestsUpdateComponent,
     MaprRequestsInfoComponent,

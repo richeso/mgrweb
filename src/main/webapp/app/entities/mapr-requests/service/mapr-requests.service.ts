@@ -16,6 +16,7 @@ export type EntityArrayResponseType = HttpResponse<IMaprRequests[]>;
 export class MaprRequestsService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/mapr-requests');
   protected downloadUrl = this.applicationConfigService.getEndpointFor('api/getzip');
+  protected listvolumesUrl = this.applicationConfigService.getEndpointFor('/api/mapr-listvolumes');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -50,6 +51,13 @@ export class MaprRequestsService {
     const options = createRequestOption(req);
     return this.http
       .get<IMaprRequests[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
+  listvolumes(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<IMaprRequests[]>(this.listvolumesUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 

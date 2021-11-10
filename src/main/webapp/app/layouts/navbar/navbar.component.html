@@ -58,6 +58,19 @@
           <li>
             <a
               class="dropdown-item"
+              routerLink="/mapr-requests/volumes"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span jhiTranslate="mgrwebApp.maprRequests.home.maprVolumeList">Mapr Volume List</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              class="dropdown-item"
               routerLink="/mapr-requests/new"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"

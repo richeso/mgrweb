@@ -2,6 +2,7 @@ package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.domain.MaprRequests;
+import java.time.Instant;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,32 @@ public class MapRService {
     private final String URI_VOLUME_REMOVE = "/api/deletevol";
     private final String URI_ALL = "/api/mapr";
     private final String URI_VOLUME_LIST = "/volume/list";
-    private final String VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
+    private final String _creator = "creator";
+    private final String _volumename = "volumename";
+    private final String _mountdir = "mountdir";
+    private final String _quota = "quota";
+    private final String _dareEnabled = "dareEnabled";
+    private final String _advisoryquota = "advisoryquota";
+    private final String _wireSecurity = "wireSecurity";
+    private final String _creationTime = "creationTime";
+
+    private final String VOLUME_LIST_COLUMNS =
+        _creator +
+        "," +
+        _volumename +
+        "," +
+        _mountdir +
+        "," +
+        _quota +
+        "," +
+        _dareEnabled +
+        "," +
+        _advisoryquota +
+        "," +
+        _wireSecurity +
+        "," +
+        _creationTime;
+
     private String FILTER_COLUMN = "[aename==@userid]";
     private static final Logger log = LoggerFactory.getLogger(MapRService.class);
 
@@ -137,7 +163,13 @@ public class MapRService {
                 .queryParam("filter", aefilter)
                 .queryParam("columns", VOLUME_LIST_COLUMNS);
             // Make the request to list all volumes belonging to ae
-            ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
+            System.out.println("uri=" + builder.build().encode().toUriString());
+            ResponseEntity<Map> response = restTemplate.exchange(
+                builder.build().encode().toUriString(),
+                HttpMethod.POST,
+                request,
+                Map.class
+            );
             // ObjectMapper objectMapper = new ObjectMapper();
             // String responseString = objectMapper.writeValueAsString(response.getBody());
             Map<String, Object> listmap = null;
@@ -151,14 +183,26 @@ public class MapRService {
 
             List<MaprRequests> results = new ArrayList<MaprRequests>();
             Iterator i = volumemap.iterator();
+            int num = 0;
             while (i.hasNext()) {
                 Map<String, Object> aVolume = (Map<String, Object>) i.next();
                 MaprRequests aRequest = new MaprRequests();
                 //VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
-                aRequest.setName((String) aVolume.get("volumename"));
-                aRequest.setPath((String) aVolume.get("mountdir"));
-                aRequest.getExtraProperties().put("advisoryquota", (String) aVolume.get("advisoryquota"));
-                aRequest.getExtraProperties().put("quota", (String) aVolume.get("quota"));
+                Long ctime = (Long) aVolume.get(_creationTime);
+                Instant cins = new Date(ctime.longValue()).toInstant();
+                String creator = (String) aVolume.get(_creator);
+                aRequest.setCreatedDate(cins);
+                aRequest.setStatusDate(cins);
+                ++num;
+                aRequest.setId("MapR-Volume-" + num);
+                aRequest.setRequestUser(creator);
+                aRequest.setName((String) aVolume.get(_volumename));
+                aRequest.setPath((String) aVolume.get(_mountdir));
+                aRequest.setCreatedBy(creator);
+                aRequest.getExtraProperties().put(_advisoryquota, aVolume.get(_advisoryquota) + "");
+                aRequest.getExtraProperties().put(_quota, aVolume.get(_quota) + "");
+                aRequest.getExtraProperties().put(_dareEnabled, aVolume.get(_dareEnabled) + "");
+                aRequest.getExtraProperties().put(_wireSecurity, aVolume.get(_wireSecurity) + "");
                 results.add(aRequest);
             }
             return results;
@@ -168,6 +212,12 @@ public class MapRService {
             log.debug(errormsg);
             throw e;
         }
+    }
+
+    private Instant stringToInstant(String aString) {
+        long aTime = new Long(aString).longValue();
+        Instant anInstant = new Date(aTime).toInstant();
+        return anInstant;
     }
 
     private HttpHeaders createAuthHeader(String username, String password) {

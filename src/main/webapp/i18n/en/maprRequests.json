@@ -3,7 +3,9 @@
     "maprRequests": {
       "home": {
         "title": "Volume Audit",
+        "title_volume_list": "MapR Volume List",
         "refreshListLabel": "Refresh list",
+        "maprVolumeList": "MapR Volume List",
         "createLabel": "Create a new Volume Request",
         "createOrEditLabel": "Create Volume Request",
         "notFound": "No Volume Requests found"
@@ -16,7 +18,7 @@
       },
       "downloaded": "Fuse Client Setup has been downloaded for the Volume {{ param }}",
       "download": {
-        "question": "Downloading the Fuse Client Setup for new Volumes. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download the Client and Instructions}"
+        "question": "Downloading the Fuse Client Setup for new Volumes. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download the Client Setup Package with Instructions"
       },
       "detail": {
         "title": "Volume Audit"
