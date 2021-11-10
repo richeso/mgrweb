@@ -1,6 +1,7 @@
 package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mapr.mgrweb.config.Constants;
 import com.mapr.mgrweb.domain.MaprRequests;
 import java.time.Instant;
 import java.util.*;
@@ -126,7 +127,7 @@ public class MapRService {
         }
     }
 
-    public String volinfo(String username, String password, String volume) throws Exception {
+    public Optional<MaprRequests> volinfo(String username, String password, String volumename) throws Exception {
         try {
             HttpHeaders headers = createAuthHeader(username, password);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -135,17 +136,20 @@ public class MapRService {
                 .fromHttpUrl(maprHost + URI_VOLUME_INFO)
                 .queryParam("userid", username)
                 .queryParam("password", password)
-                .queryParam("volume", volume);
+                .queryParam("volume", volumename);
             // make a request
             ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseString = objectMapper.writeValueAsString(response.getBody());
-            return responseString;
+            // ObjectMapper objectMapper = new ObjectMapper();
+            // String responseString = objectMapper.writeValueAsString(response.getBody());
+            // return responseString;
+            List<MaprRequests> results = getMaprRequests(response);
+            Optional<MaprRequests> aRequest = Optional.of(results.get(0));
+            return aRequest;
         } catch (Exception e) {
             //e.printStackTrace();
             String errormsg = "Error Encountered: " + e.getMessage();
             log.debug(errormsg);
-            return errormsg;
+            throw e;
         }
     }
 
@@ -170,41 +174,7 @@ public class MapRService {
                 request,
                 Map.class
             );
-            // ObjectMapper objectMapper = new ObjectMapper();
-            // String responseString = objectMapper.writeValueAsString(response.getBody());
-            Map<String, Object> listmap = null;
-            ArrayList<Map<String, Object>> volumemap = null;
-            try {
-                listmap = (Map<String, Object>) response.getBody();
-                volumemap = (ArrayList<Map<String, Object>>) listmap.get("data");
-            } catch (Exception e) {
-                // swallow exception...assuming nothing was returned from the rest call
-            }
-
-            List<MaprRequests> results = new ArrayList<MaprRequests>();
-            Iterator i = volumemap.iterator();
-            int num = 0;
-            while (i.hasNext()) {
-                Map<String, Object> aVolume = (Map<String, Object>) i.next();
-                MaprRequests aRequest = new MaprRequests();
-                //VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
-                Long ctime = (Long) aVolume.get(_creationTime);
-                Instant cins = new Date(ctime.longValue()).toInstant();
-                String creator = (String) aVolume.get(_creator);
-                aRequest.setCreatedDate(cins);
-                aRequest.setStatusDate(cins);
-                ++num;
-                aRequest.setId("MapR-Volume-" + num);
-                aRequest.setRequestUser(creator);
-                aRequest.setName((String) aVolume.get(_volumename));
-                aRequest.setPath((String) aVolume.get(_mountdir));
-                aRequest.setCreatedBy(creator);
-                aRequest.getExtraProperties().put(_advisoryquota, aVolume.get(_advisoryquota) + "");
-                aRequest.getExtraProperties().put(_quota, aVolume.get(_quota) + "");
-                aRequest.getExtraProperties().put(_dareEnabled, aVolume.get(_dareEnabled) + "");
-                aRequest.getExtraProperties().put(_wireSecurity, aVolume.get(_wireSecurity) + "");
-                results.add(aRequest);
-            }
+            List<MaprRequests> results = getMaprRequests(response);
             return results;
         } catch (Exception e) {
             //e.printStackTrace();
@@ -212,6 +182,50 @@ public class MapRService {
             log.debug(errormsg);
             throw e;
         }
+    }
+
+    private List<MaprRequests> getMaprRequests(ResponseEntity<Map> response) {
+        // ObjectMapper objectMapper = new ObjectMapper();
+        // String responseString = objectMapper.writeValueAsString(response.getBody());
+        Map<String, Object> listmap = null;
+        ArrayList<Map<String, Object>> volumemap = null;
+        try {
+            listmap = (Map<String, Object>) response.getBody();
+            volumemap = (ArrayList<Map<String, Object>>) listmap.get("data");
+        } catch (Exception e) {
+            // swallow exception...assuming nothing was returned from the rest call
+        }
+
+        List<MaprRequests> results = new ArrayList<MaprRequests>();
+        Iterator i = volumemap.iterator();
+        int num = 0;
+        while (i.hasNext()) {
+            Map<String, Object> aVolume = (Map<String, Object>) i.next();
+            MaprRequests aRequest = new MaprRequests();
+            //VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
+            ++num;
+            populateMaprRequest(Constants.MAPR_VOLUME_ID + num, aVolume, aRequest);
+            results.add(aRequest);
+        }
+        return results;
+    }
+
+    private void populateMaprRequest(String volumeid, Map<String, Object> aVolume, MaprRequests aRequest) {
+        Long ctime = (Long) aVolume.get(_creationTime);
+        Instant cins = new Date(ctime.longValue()).toInstant();
+        String creator = (String) aVolume.get(_creator);
+        String volumeName = (String) aVolume.get(_volumename);
+        aRequest.setCreatedDate(cins);
+        aRequest.setStatusDate(cins);
+        aRequest.setRequestUser(creator);
+        aRequest.setName(volumeName);
+        aRequest.setId(volumeid + "-" + volumeName);
+        aRequest.setPath((String) aVolume.get(_mountdir));
+        aRequest.setCreatedBy(creator);
+        aRequest.getExtraProperties().put(_advisoryquota, aVolume.get(_advisoryquota) + "");
+        aRequest.getExtraProperties().put(_quota, aVolume.get(_quota) + "");
+        aRequest.getExtraProperties().put(_dareEnabled, aVolume.get(_dareEnabled) + "");
+        aRequest.getExtraProperties().put(_wireSecurity, aVolume.get(_wireSecurity) + "");
     }
 
     private Instant stringToInstant(String aString) {

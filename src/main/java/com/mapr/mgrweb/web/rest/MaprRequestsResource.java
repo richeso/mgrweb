@@ -162,9 +162,22 @@ public class MaprRequestsResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the maprRequests, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/mapr-requests/{id}")
-    public ResponseEntity<MaprRequests> getMaprRequests(@PathVariable String id) {
+    public ResponseEntity<MaprRequests> getMaprRequests(@PathVariable String id) throws Exception {
         log.debug("REST request to get MaprRequests : {}", id);
-        Optional<MaprRequests> maprRequests = maprRequestsRepository.findById(id);
+        Optional<MaprRequests> maprRequests;
+        if (id.startsWith(Constants.MAPR_VOLUME_ID)) {
+            // look for the volume in mapR
+            String userid = SecurityUtils.getCurrentUserLogin().get();
+            int pos = id.indexOf("-");
+            String volumeid = id.substring(0, pos);
+            String volumename = id.substring(pos + 1);
+            String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
+            maprRequests = mapRService.volinfo(userid, password, volumename);
+            if (maprRequests.isPresent()) maprRequests.get().setId(id);
+        } else {
+            // look for the volume in the audit log
+            maprRequests = maprRequestsRepository.findById(id);
+        }
         return ResponseUtil.wrapOrNotFound(maprRequests);
     }
 

@@ -18,6 +18,7 @@ public final class Constants {
     public static final String ADMIN_USERNAME = "root";
     public static final String CREATED_STATUS = "CREATED";
     public static final String DELETED_STATUS = "DELETED";
+    public static final String MAPR_VOLUME_ID = "MapR_";
 
     private Constants() {}
 }
