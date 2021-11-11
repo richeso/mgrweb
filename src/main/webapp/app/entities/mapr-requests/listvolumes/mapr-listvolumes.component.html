@@ -79,16 +79,10 @@
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
               </button>
 -->
-              <div *ngIf="maprRequests && maprRequests.status === 'CREATED'">
-                <button type="submit" (click)="download(maprRequests)" class="btn btn-primary btn-sm" data-cy="entityDownloadButton">
-                  <fa-icon icon="eye"></fa-icon>
-                  <span class="d-none d-md-inline" jhiTranslate="entity.action.download">Download</span>
-                </button>
-                <button type="submit" (click)="delete(maprRequests)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                  <fa-icon icon="times"></fa-icon>
-                  <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                </button>
-              </div>
+              <button type="submit" (click)="delete(maprRequests)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
             </div>
           </td>
         </tr>
