@@ -34,6 +34,7 @@ public class MapRService {
     private final String _advisoryquota = "advisoryquota";
     private final String _wireSecurity = "wireSecurity";
     private final String _creationTime = "creationTime";
+    private final String _aename = "aename";
 
     private final String VOLUME_LIST_COLUMNS =
         _creator +
@@ -50,7 +51,9 @@ public class MapRService {
         "," +
         _wireSecurity +
         "," +
-        _creationTime;
+        _creationTime +
+        "," +
+        _aename;
 
     private String FILTER_COLUMN = "[aename==@userid]";
     private static final Logger log = LoggerFactory.getLogger(MapRService.class);
@@ -214,14 +217,16 @@ public class MapRService {
         Long ctime = (Long) aVolume.get(_creationTime);
         Instant cins = new Date(ctime.longValue()).toInstant();
         String creator = (String) aVolume.get(_creator);
+        String aename = (String) aVolume.get(_aename);
         String volumeName = (String) aVolume.get(_volumename);
         aRequest.setCreatedDate(cins);
         aRequest.setStatusDate(cins);
-        aRequest.setRequestUser(creator);
+        aRequest.setRequestUser(aename);
+        aRequest.setStatus(Constants.CREATED_STATUS);
+        aRequest.setRequestDate(cins);
         aRequest.setName(volumeName);
         aRequest.setId(volumeid + "-" + volumeName);
         aRequest.setPath((String) aVolume.get(_mountdir));
-        aRequest.setCreatedBy(creator);
         aRequest.getExtraProperties().put(_advisoryquota, aVolume.get(_advisoryquota) + "");
         aRequest.getExtraProperties().put(_quota, aVolume.get(_quota) + "");
         aRequest.getExtraProperties().put(_dareEnabled, aVolume.get(_dareEnabled) + "");

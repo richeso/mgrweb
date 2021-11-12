@@ -90,4 +90,22 @@ public class MaprRequestsRepository extends MapRDBRepository<MaprRequests> {
             .map(doc -> Mapper.read(doc.asJsonString(), MaprRequests.class))
             .collect(Collectors.toList());
     }
+
+    public List<MaprRequests> findByName(String name) {
+        DocumentStore store = mapRDBSession.getStore(maprRequestsTable);
+        Connection connection = mapRDBSession.getConnection();
+        QueryCondition condition = connection
+            .newCondition()
+            .and()
+            .condition(connection.newCondition().is("name", QueryCondition.Op.EQUAL, name).build())
+            .close()
+            .build();
+
+        Query query = connection.newQuery().where(condition).build();
+
+        return StreamSupport
+            .stream(store.find(query).spliterator(), false)
+            .map(doc -> Mapper.read(doc.asJsonString(), MaprRequests.class))
+            .collect(Collectors.toList());
+    }
 }

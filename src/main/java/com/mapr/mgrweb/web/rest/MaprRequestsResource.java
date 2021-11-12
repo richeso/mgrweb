@@ -189,7 +189,35 @@ public class MaprRequestsResource {
      */
     @DeleteMapping("/mapr-requests/{id}")
     public ResponseEntity<Void> deleteMaprRequests(@PathVariable String id) throws Exception {
-        Optional<MaprRequests> maprRequests = maprRequestsRepository.findById(id);
+        Optional<MaprRequests> maprRequests;
+        boolean isMaprVolume = id.startsWith(Constants.MAPR_VOLUME_ID);
+
+        if (isMaprVolume) {
+            // look for the volume in Audit Log and Insert it if it isn't already there
+            String userid = SecurityUtils.getCurrentUserLogin().get();
+            int pos = id.indexOf("-");
+            String volumeid = id.substring(0, pos);
+            String volumename = id.substring(pos + 1);
+            String password = SecurityUtils.getMgrWebToken().getDecryptedCredentials();
+            maprRequests = mapRService.volinfo(userid, password, volumename);
+            List<MaprRequests> namedList = maprRequestsRepository.findByName(volumename);
+            if (namedList.isEmpty()) {
+                if (maprRequests.isPresent()) {
+                    maprRequests.get().initNewId();
+                    maprRequests.get().setType(Constants.CREATED_BY_VOL);
+                    maprRequests.get().setAction(Constants.DELETED_BY_VOL);
+                    // create audit log, since volume doesn't exist
+                    maprRequestsRepository.save(maprRequests.get());
+                }
+            } else {
+                maprRequests = Optional.of(namedList.get(0));
+                maprRequests.get().setStatus(Constants.CREATED_STATUS);
+            }
+        } else {
+            // look for the volume in the audit log
+            maprRequests = maprRequestsRepository.findById(id);
+        }
+
         MaprRequests aRequest = maprRequests.get();
 
         if (aRequest != null) {
@@ -208,11 +236,12 @@ public class MaprRequestsResource {
             if (deleteResults.toUpperCase().indexOf("ERROR") >= 0) {
                 throw new BadRequestAlertException(message, "", "");
             }
-            maprRequestsRepository.delete(id);
+            maprRequestsRepository.delete(aRequest.getId());
+            message = "Successfully Deleted New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
+            return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, message, "")).build();
+        } else {
+            throw new BadRequestAlertException("Cannot Delete Volume. Unable to find Volume : " + id + " to delete", "", "");
         }
-
-        String message = "Successfully Deleted New Volume with Name: " + aRequest.getName() + " in Path: " + aRequest.getPath();
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, message, "")).build();
     }
 
     /**
