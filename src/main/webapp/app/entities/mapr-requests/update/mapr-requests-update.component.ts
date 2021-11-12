@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -38,6 +38,7 @@ export class MaprRequestsUpdateComponent implements OnInit {
   constructor(
     protected maprRequestsService: MaprRequestsService,
     protected activatedRoute: ActivatedRoute,
+    protected router: Router,
     protected fb: FormBuilder,
     protected accountService: AccountService,
     protected alertService: AlertService
@@ -80,7 +81,8 @@ export class MaprRequestsUpdateComponent implements OnInit {
   }
 
   protected onSaveSuccess(): void {
-    this.previousState();
+    //this.previousState();
+    this.router.navigate(['mapr-requests/volumes']);
   }
 
   protected onSaveError(): void {
