@@ -28,6 +28,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder
   ) {}
 
+  delay(ms: number): Promise<any> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   ngOnInit(): void {
     // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
@@ -53,7 +57,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.authenticationError = false;
           if (!this.router.getCurrentNavigation()) {
             // There were no routing during login (eg from navigationToStoredUrl)
-            this.router.navigate(['mapr-requests/volumes']);
+            // sleep 300 milliseconds to allow login tokens to be properly created
+            (async () => {
+              // Do something before delay
+              // console.log('before delay')
+              await this.delay(300);
+              // Do something after
+              this.router.navigate(['mapr-requests/volumes']);
+            })();
           }
         },
         () => (this.authenticationError = true)

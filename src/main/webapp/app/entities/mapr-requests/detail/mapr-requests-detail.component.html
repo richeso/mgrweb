@@ -32,9 +32,22 @@
         </dd>
 
         <span>
-          <dt>Volume Quotas and Additional Properties:</dt>
-          <div *ngFor="let item of maprRequests.extraProperties | keyvalue">{{ item.key }} - {{ item.value }} MB</div>
+          <dt>Additional Volume Properties:</dt>
+          <div *ngFor="let item of maprRequests.extraProperties | keyvalue">
+            <div [ngSwitch]="item.key">
+              <div *ngSwitchCase="'quota'">{{ item.key }} - {{ item.value }} MB</div>
+              <div *ngSwitchCase="'advisoryquota'">{{ item.key }} - {{ item.value }} MB</div>
+              <div *ngSwitchDefault>
+                <div [ngSwitch]="item.value">
+                  <div *ngSwitchCase="'0'">{{ item.key }}: false</div>
+                  <div *ngSwitchCase="'1'">{{ item.key }}: true</div>
+                  <div *ngSwitchDefault>{{ item.key }}: {{ item.value }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </span>
+
         <p></p>
         <dt><span jhiTranslate="mgrwebApp.maprRequests.requestUser">Request User</span></dt>
         <dd>
