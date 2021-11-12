@@ -55,7 +55,7 @@ public class MapRService {
         "," +
         _aename;
 
-    private String FILTER_COLUMN = "[aename==@userid]";
+    private String FILTER_COLUMN = "aename==@userid";
     private static final Logger log = LoggerFactory.getLogger(MapRService.class);
 
     @Autowired
@@ -171,12 +171,7 @@ public class MapRService {
                 .queryParam("columns", VOLUME_LIST_COLUMNS);
             // Make the request to list all volumes belonging to ae
             System.out.println("uri=" + builder.build().encode().toUriString());
-            ResponseEntity<Map> response = restTemplate.exchange(
-                builder.build().encode().toUriString(),
-                HttpMethod.POST,
-                request,
-                Map.class
-            );
+            ResponseEntity<Map> response = restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, request, Map.class);
             List<MaprRequests> results = getMaprRequests(response);
             return results;
         } catch (Exception e) {
@@ -207,7 +202,8 @@ public class MapRService {
             MaprRequests aRequest = new MaprRequests();
             //VOLUME_LIST_COLUMNS = "volumename,mountdir,quota,advisoryqota,dareEnabled,wireSecurity";
             ++num;
-            populateMaprRequest(Constants.MAPR_VOLUME_ID + num, aVolume, aRequest);
+            String formattedNum = String.format("%05d", num);
+            populateMaprRequest(Constants.MAPR_VOLUME_ID + formattedNum, aVolume, aRequest);
             results.add(aRequest);
         }
         return results;
