@@ -33,14 +33,18 @@
       <thead>
         <tr>
           <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <!--
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.type">Type</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.action">Action</span></th>
+          -->
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.name">Name</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.path">Path</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.requestUser">Request User</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.requestDate">Request Date</span></th>
+          <!--
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.status">Status</span></th>
           <th scope="col"><span jhiTranslate="mgrwebApp.maprRequests.statusDate">Status Date</span></th>
+          -->
           <th scope="col"></th>
         </tr>
       </thead>
@@ -49,14 +53,18 @@
           <td>
             <a [routerLink]="['/mapr-requests', maprRequests.id, 'view']">{{ maprRequests.id }}</a>
           </td>
+          <!--
           <td>{{ maprRequests.type }}</td>
           <td>{{ maprRequests.action }}</td>
+          -->
           <td>{{ maprRequests.name }}</td>
           <td>{{ maprRequests.path }}</td>
           <td>{{ maprRequests.requestUser }}</td>
           <td>{{ maprRequests.requestDate | formatMediumDatetime }}</td>
+          <!--
           <td>{{ maprRequests.status }}</td>
           <td>{{ maprRequests.statusDate | formatMediumDatetime }}</td>
+          -->
           <td class="text-right">
             <div class="btn-group">
               <button

@@ -2,21 +2,21 @@
   "mgrwebApp": {
     "maprRequests": {
       "home": {
-        "title": "Volume Audit",
-        "title_volume_list": "MapR Volume List",
+        "title": "Audit Trail",
+        "title_volume_list": "Volume List",
         "refreshListLabel": "Refresh list",
-        "maprVolumeList": "MapR Volume List",
-        "createLabel": "Create a new Volume Request",
-        "createOrEditLabel": "Create Volume Request",
-        "notFound": "No Volume Requests found"
+        "maprVolumeList": "Volume List",
+        "createLabel": "Create a new Volume",
+        "createOrEditLabel": "Create a new Volume",
+        "notFound": "No Volumes found"
       },
       "created": "Volume Successfully Created:  {{ param }}",
-      "updated": "A Volume Request is updated with identifier {{ param }}",
+      "updated": "A Volume has been updated with identifier {{ param }}",
       "deleted": "Volume Successfully Deleted: {{ param }}",
       "delete": {
         "question": "Are you sure you want to Delete the Volume Named: &nbsp {{ param1 }} in path: {{param2}}?"
       },
-      "downloaded": "Fuse Client Setup has been downloaded for the Volume {{ param }}",
+      "downloaded": "Fuse Client Setup Files Download Completed",
       "download": {
         "question": "Downloading the Fuse Client Setup for new Volumes. \n Please unzip the downloaded file and follow instructions in *.txt. &nbsp; \n Please Confirm to Download the Client Setup Package with Instructions"
       },
@@ -26,8 +26,8 @@
       "id": "ID",
       "type": "Type",
       "action": "Action",
-      "name": "Volume",
-      "path": "Path",
+      "name": "Volume Name",
+      "path": "Mount Path",
       "advisoryquota": "Advisory Quota (MB)",
       "quota": "Quota (MB)",
       "requestUser": "Requested By",
