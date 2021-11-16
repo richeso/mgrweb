@@ -6,8 +6,8 @@
         "title_volume_list": "Volume List",
         "refreshListLabel": "Refresh list",
         "maprVolumeList": "Volume List",
-        "createLabel": "Create a new Volume",
-        "createOrEditLabel": "Create a new Volume",
+        "createLabel": "Create Volume",
+        "createOrEditLabel": "Create Volume",
         "notFound": "No Volumes found"
       },
       "created": "Volume Successfully Created:  {{ param }}",
