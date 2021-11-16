@@ -168,3 +168,6 @@ mapr:
     authoritiesTable: /user/msapp/authorities
     auditeEventsTable: /user/msapp/audit
     maprRequests: /user/msapp/maprRequests
+
+totp:
+  secret: DQZUCXUE7EERM4XXQHANMF6JZJLNP2EJ

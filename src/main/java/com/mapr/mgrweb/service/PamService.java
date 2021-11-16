@@ -1,6 +1,7 @@
 package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mapr.mgrweb.config.TotpUtility;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
@@ -26,6 +27,9 @@ public class PamService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    TotpUtility totp;
 
     @Value("${api.host.pam}")
     private String pamHost;
@@ -58,13 +62,15 @@ public class PamService {
         }
     }
 
-    private HttpHeaders createAuthHeader(String username, String password) {
+    private HttpHeaders createAuthHeader(String username, String password) throws Exception {
         // create auth credentials
         String authStr = username + ":" + password;
         String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
         // create headers
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + base64Creds);
+        String authtoken = totp.generateCode();
+        headers.add("authtoken", authtoken);
         return headers;
     }
 }

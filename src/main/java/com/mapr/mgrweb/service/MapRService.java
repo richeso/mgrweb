@@ -2,6 +2,7 @@ package com.mapr.mgrweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapr.mgrweb.config.Constants;
+import com.mapr.mgrweb.config.TotpUtility;
 import com.mapr.mgrweb.domain.MaprRequests;
 import java.time.Instant;
 import java.util.*;
@@ -11,10 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -60,6 +57,9 @@ public class MapRService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    TotpUtility totp;
 
     @Value("${api.host.pam}")
     private String pamHost;
@@ -235,13 +235,15 @@ public class MapRService {
         return anInstant;
     }
 
-    private HttpHeaders createAuthHeader(String username, String password) {
+    private HttpHeaders createAuthHeader(String username, String password) throws Exception {
         // create auth credentials
         String authStr = username + ":" + password;
         String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
         // create headers
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + base64Creds);
+        String authtoken = totp.generateCode();
+        headers.add("authtoken", authtoken);
         return headers;
     }
 }
