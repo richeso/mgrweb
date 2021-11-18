@@ -53,7 +53,9 @@ class JWTFilterTest {
         jwtFilter.doFilter(request, response, filterChain);
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(SecurityContextHolder.getContext().getAuthentication().getName()).isEqualTo("test-user");
-        assertThat(SecurityContextHolder.getContext().getAuthentication().getCredentials()).hasToString(jwt);
+        String jwtDecrypted = tokenProvider.decryptToken(jwt);
+        //System.out.println(jwtDecrypted);
+        assertThat(SecurityContextHolder.getContext().getAuthentication().getCredentials()).hasToString(jwtDecrypted);
     }
 
     @Test
